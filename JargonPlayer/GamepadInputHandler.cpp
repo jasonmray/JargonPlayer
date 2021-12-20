@@ -30,7 +30,7 @@ void GamepadInputHandler::handleInput(VideoWindow* videoWindow, mpv_handle *mpv,
 
 void GamepadInputHandler::handleControllerButton(VideoWindow* videoWindow, mpv_handle *mpv, SDL_Event& event) {
 	if (event.cbutton.button == SDL_CONTROLLER_BUTTON_A) {
-		mpv_command(mpv, MpvCommands::TogglePlayPause);
+		videoWindow->playPause();
 	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_RIGHTSHOULDER) {
 		mpv_command(mpv, MpvCommands::PlaylistNext);
 	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER) {

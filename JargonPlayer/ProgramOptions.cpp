@@ -1,6 +1,8 @@
 #include "ProgramOptions.h"
 #include "Util.h"
 
+#include "Jargon/System/Utilities.h"
+
 #include <algorithm>
 #include <ctime>
 #include <random>
@@ -12,6 +14,7 @@ ProgramOptions::ProgramOptions() :
 	sortFiles(true),
 	shuffleFiles(false),
 	skipImages(false),
+	skipArchives(false),
 	useHardwareDecoding(true)
 {
 }
@@ -36,18 +39,26 @@ bool ProgramOptions::processOptions(int argc, const char *argv[]) {
 				this->shuffleFiles = true;
 			} else if (Util::stringEqualCaseInsensitive(optionName, "skipimages")) {
 				this->skipImages = true;
+			} else if (Util::stringEqualCaseInsensitive(optionName, "skiparchives")) {
+				this->skipArchives = true;
 			} else if (Util::stringEqualCaseInsensitive(optionName, "disablehwdec")) {
 				this->useHardwareDecoding = false;
 			} else {
 				return false;
 			}
 		} else {
-			this->files.push_back(argv[i]);
+			const char * filename = argv[i];
+			if (strchr(filename, '*') != nullptr || strchr(filename, '?') != nullptr) {
+				Jargon::System::globFiles(filename, this->files);
+			} else{
+				this->files.push_back(filename);
+			}
+
 		}
 	}
 
 	if (this->sortFiles) {
-		std::sort(this->files.begin(), this->files.end(), [](const char* a, const char* b) { return _stricmp(a, b) < 0; });
+		std::sort(this->files.begin(), this->files.end());
 	} else if (this->shuffleFiles) {
 		std::random_device randomDevice;
 		std::srand(randomDevice());

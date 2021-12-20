@@ -45,10 +45,10 @@
     <ClCompile Include="src\StringUtilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Jargon\System\Event.cpp">
-      <Filter>Header Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="src\System\Clipboard.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\Event.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>

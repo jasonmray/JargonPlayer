@@ -43,5 +43,14 @@ namespace StringUtilities{
 		return wideToUtf8(wString.c_str(), wString.size());
 	}
 
+	std::wstring utf8ToWide(const char* utf8string) {
+		int destSize = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, utf8string, -1, NULL, 0);
+
+		std::wstring wideString(destSize, 0);
+		MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, utf8string, -1, &wideString[0], destSize);
+
+		return wideString;
+	}
+
 }
 }

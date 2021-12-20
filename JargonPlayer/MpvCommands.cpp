@@ -2,6 +2,7 @@
 
 namespace MpvCommands{
 	const char* TogglePlayPause[] = {"osd-bar", "cycle", "pause", 0};
+	const char* ShowPlayPause[] = {"expand-properties", "show-text", "Paused: ${pause}", 0};
 	const char* Pause[] = {"osd-bar", "set", "pause", "1", 0};
 	const char* UnPause[] = {"osd-bar", "set", "pause", "0", 0};
 	const char* ResumePlayback[] = {"osd-bar", "resume-playback,", 0};
@@ -22,6 +23,7 @@ namespace MpvCommands{
 	const char* SpeedDecrease[] = {"osd-bar", "multiply", "speed", "1/1.1", 0};
 	const char* SpeedIncrease[] = {"osd-bar", "multiply", "speed", "1.1", 0};
 	const char* SpeedReset[] = {"osd-bar", "set", "speed", "1.0", 0};
+	const char* ShowSpeed[] = {"expand-properties", "show-text", "Speed: ${speed}", 0};
 	const char* VolumeDecrease[] = {"osd-bar", "add", "volume", "-2", 0};
 	const char* VolumeIncrease[] = {"osd-bar", "add", "volume", "2", 0};
 	const char* MuteToggle[] = {"osd-bar", "cycle", "mute", 0};
@@ -47,8 +49,10 @@ namespace MpvCommands{
 	const char* ShowMuteStatus[] = {"expand-properties", "show-text", "MUTE: ${mute}", 0};
 	const char* CycleSubtitlesUp[] = {"cycle", "sub", "up", 0};
 	const char* CycleSubtitlesDown[] = {"cycle", "sub", "down", 0};
+	const char* ShowSubtitlesTrack[] = {"expand-properties", "show-text", "Subtitles Track: ${sub}", 0};
 	const char* CycleAudioTrackUp[] = {"cycle", "audio", "up", 0};
 	const char* CycleAudioTrackDown[] = {"cycle", "audio", "down", 0};
+	const char* ShowAudioTrack[] = {"expand-properties", "show-text", "Audio Track: ${audio}", 0};
 	const char* ToggleDeinterlace[] = {"cycle", "deinterlace", 0};
 	const char* ShowInterlaceStatus[] = {"expand-properties", "show-text", "Deinterlace: ${deinterlace}", 0};
 	const char* Rotate0[] = {"set", "video-rotate", "0", 0};

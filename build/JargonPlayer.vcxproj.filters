@@ -64,9 +64,6 @@
     <ClInclude Include="..\JargonPlayer\TouchInputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\JargonPlayer\VideoVR.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\JargonPlayer\WindowsDpiFix.h">
       <Filter>Header Files</Filter>
     </ClInclude>

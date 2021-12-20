@@ -14,7 +14,8 @@ class PlaylistFilter{
 		void handlePlaylistChange(mpv_handle* mpv, const mpv_node& propertyEventData);
 
 	private:
-		bool isImageType(const std::string& ext);
+		bool isType(const std::string& ext, const std::set<std::string>& extensions);
 
 		std::set<std::string> imageExtensions;
+		std::set<std::string> archiveExtensions;
 };

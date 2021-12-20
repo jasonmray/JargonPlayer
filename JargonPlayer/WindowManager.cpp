@@ -1,5 +1,6 @@
 #include "WindowManager.h"
 #include "TraceLogging.h"
+#include "Jargon/System/Utilities.h"
 
 WindowManager::WindowManager(const ProgramOptions& programOptions):
 	programOptions(programOptions)
@@ -23,13 +24,22 @@ void WindowManager::closeAll(){
 	for(auto& window : windows){
 		window.second->close();
 	}
-	windows.clear();
 }
 
 void WindowManager::playPauseAll(){
 	for(auto& window : windows){
 		window.second->playPause();
 	}
+}
+
+bool WindowManager::isAnyWindowPlaying(){
+	for (auto& window : windows) {
+		if (window.second->isPlaying()) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void WindowManager::pumpEvents(){
@@ -107,5 +117,19 @@ void WindowManager::pumpEvents(){
 				focusedWindow = InvalidWindow;
 			}
 		}
+
+		pingDisplayTimeout();
 	}
+}
+
+void WindowManager::pingDisplayTimeout(){
+	bool anyWindowPlaying = isAnyWindowPlaying();
+
+	if (anyWindowPlaying && !wasAnyWindowPlaying) {
+		Jargon::System::notifyDisplayInUse(true);
+	} else if (!anyWindowPlaying && wasAnyWindowPlaying) {
+		Jargon::System::notifyDisplayInUse(false);
+	}
+
+	wasAnyWindowPlaying = anyWindowPlaying;
 }

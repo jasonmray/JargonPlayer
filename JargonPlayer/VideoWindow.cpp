@@ -43,6 +43,7 @@ VideoWindow::VideoWindow():
 	mpv_set_option(mpv, "osd-bar", MPV_FORMAT_FLAG, &t);
 	mpv_set_option(mpv, "term-osd-bar", MPV_FORMAT_FLAG, &t);
 	mpv_set_option(mpv, "video-osd", MPV_FORMAT_FLAG, &t);
+
 	{
 		static double y = 0.95;
 		mpv_set_option(mpv, "osd-bar-align-y", MPV_FORMAT_DOUBLE, &y);
@@ -51,6 +52,7 @@ VideoWindow::VideoWindow():
 		static double w = 95;
 		mpv_set_option(mpv, "osd-bar-w", MPV_FORMAT_DOUBLE, &w);
 	}
+
 	mpv_set_option_string(mpv, "video-osd", "yes");
 	mpv_set_option_string(mpv, "osc-visibility", "auto");
 
@@ -58,6 +60,9 @@ VideoWindow::VideoWindow():
 	mpv_set_option(mpv, "osd-level", MPV_FORMAT_INT64, &one);
 	mpv_set_option_string(mpv, "player-operation-mode", "pseudo-gui");
 	mpv_set_option_string(mpv, "keep-open", "yes");
+
+	int64_t value150 = 150;
+	mpv_set_option(mpv, "volume-max", MPV_FORMAT_INT64, &value150);
 
 	mpv_observe_property(mpv, 0, "file-format", MPV_FORMAT_STRING);
 	mpv_observe_property(mpv, 0, "playlist", MPV_FORMAT_NODE);
@@ -142,6 +147,11 @@ void VideoWindow::enqueueFile(const char* filename){
 
 void VideoWindow::playPause(){
 	mpv_command(mpv, MpvCommands::TogglePlayPause);
+	mpv_command(mpv, MpvCommands::ShowPlayPause);
+}
+
+void VideoWindow::pause(){
+	mpv_command(mpv, MpvCommands::Pause);
 }
 
 void VideoWindow::ensureUnpaused(){
@@ -150,6 +160,12 @@ void VideoWindow::ensureUnpaused(){
 	if (paused) {
 		mpv_command(mpv, MpvCommands::TogglePlayPause);
 	}
+}
+
+bool VideoWindow::isPlaying(){
+	uint32_t paused = false;
+	mpv_get_property(mpv, "pause", MPV_FORMAT_FLAG, &paused);
+	return paused == 0;
 }
 
 void VideoWindow::moveToQuadrant(int displayIndex, QuadrantLayout::WindowQuadrant quadrant){
@@ -164,6 +180,8 @@ void VideoWindow::moveToQuadrant(int displayIndex, QuadrantLayout::WindowQuadran
 	SDL_Rect displayBounds = {};
 	SDL_GetDisplayBounds(displayIndex, &displayBounds);
 	bool isOnTop = isAlwaysOnTop();
+
+	exitFullscreen();
 
 	SDL_SetWindowPosition(getSDLWindow(), r.left + displayBounds.x, r.top + displayBounds.y);
 	SDL_SetWindowSize(getSDLWindow(), r.width, r.height);
@@ -263,6 +281,18 @@ void VideoWindow::enterFullscreen(){
 	SDL_GetDisplayBounds(currentDisplayIndex, &displayBounds);
 
 	SDL_WarpMouseInWindow(getSDLWindow(), displayBounds.w, displayBounds.h / 2);
+}
+
+void VideoWindow::changeAudioFrequency(int percentDelta) {
+	audioFrequencyPercent += percentDelta;
+	std::string param = Jargon::StringUtilities::format("rubberband=pitch-scale=%f", audioFrequencyPercent / 100.f);
+	mpv_set_option_string(mpv, "af", param.c_str());
+}
+
+void VideoWindow::resetAudioFrequency() {
+	audioFrequencyPercent = 100;
+	std::string param = Jargon::StringUtilities::format("rubberband=pitch-scale=%f", audioFrequencyPercent / 100.f);
+	mpv_set_option_string(mpv, "af", param.c_str());
 }
 
 void VideoWindow::exitFullscreen(){

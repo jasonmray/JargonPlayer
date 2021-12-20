@@ -1,6 +1,7 @@
 
 namespace MpvCommands{
 	const char* TogglePlayPause[];
+	const char* ShowPlayPause[];
 	const char* Pause[];
 	const char* UnPause[];
 	const char* ResumePlayback[];
@@ -21,6 +22,7 @@ namespace MpvCommands{
 	const char* SpeedDecrease[];
 	const char* SpeedIncrease[];
 	const char* SpeedReset[];
+	const char* ShowSpeed[];
 	const char* VolumeDecrease[];
 	const char* VolumeIncrease[];
 	const char* MuteToggle[];
@@ -46,8 +48,10 @@ namespace MpvCommands{
 	const char* ShowMuteStatus[];
 	const char* CycleSubtitlesUp[];
 	const char* CycleSubtitlesDown[];
+	const char* ShowSubtitlesTrack[];
 	const char* CycleAudioTrackUp[];
 	const char* CycleAudioTrackDown[];
+	const char* ShowAudioTrack[];
 	const char* ToggleDeinterlace[];
 	const char* ShowInterlaceStatus[];
 	const char* Rotate0[];

@@ -56,7 +56,7 @@ int appmain(int argc, const char *argv[]){
 			// try to tile multi-monitor
 			for(int i = 0; i < fileCount; i++){
 				auto window = windowManager.createWindow();
-				window->startPlayAsync(programOptions.files[i]);
+				window->startPlayAsync(programOptions.files[i].c_str());
 				window->moveToQuadrant(i / 4, (QuadrantLayout::WindowQuadrant)(i%4));
 			}
 		}else if(fileCount > 1){
@@ -64,13 +64,13 @@ int appmain(int argc, const char *argv[]){
 			int chosenDisplay = findTopLeftDisplayIndex();
 			for(int i = 0; i < fileCount; i++){
 				auto window = windowManager.createWindow();
-				window->startPlayAsync(programOptions.files[i]);
+				window->startPlayAsync(programOptions.files[i].c_str());
 				window->moveToQuadrant(chosenDisplay, (QuadrantLayout::WindowQuadrant)i);
 			}
 		}else if(fileCount == 1){
 			// open a single file
 			auto window = windowManager.createWindow();
-			window->startPlayAsync(programOptions.files[0]);
+			window->startPlayAsync(programOptions.files[0].c_str());
 		}else{
 			// open an empty window
 			windowManager.createWindow();
@@ -80,9 +80,9 @@ int appmain(int argc, const char *argv[]){
 		auto window = windowManager.createWindow();
 
 		if(fileCount > 0){
-			window->startPlayAsync(programOptions.files[0]);
+			window->startPlayAsync(programOptions.files[0].c_str());
 			for(size_t i = 1; i < fileCount; i++){
-				window->enqueueFile(programOptions.files[i]);
+				window->enqueueFile(programOptions.files[i].c_str());
 			}
 		}
 	}
@@ -91,5 +91,6 @@ int appmain(int argc, const char *argv[]){
 	
 	SDL_EnableScreenSaver();
 	SDL_GameControllerClose(gameController);
+
 	return 0;
 }

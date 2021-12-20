@@ -16,6 +16,7 @@ public:
 	void closeWindow(uint32_t windowId);
 	void closeAll();
 	void playPauseAll();
+	bool isAnyWindowPlaying();
 
 	void pumpEvents();
 
@@ -27,4 +28,7 @@ private:
 	uint32_t focusedWindow = InvalidWindow;
 	bool processingDragAndDrop = false;
 	int droppedFileCount = 0;
+	bool wasAnyWindowPlaying = false;
+
+	void pingDisplayTimeout();
 };

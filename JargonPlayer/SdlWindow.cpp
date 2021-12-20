@@ -148,6 +148,14 @@ void SdlWindow::handleEvent(SDL_Event& event) {
 			}
 			break;
 		}
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+		case SDL_MOUSEWHEEL:
+		case SDL_MOUSEMOTION:
+		{
+			mouseDwellCount = 0;
+			break;
+		}
 		case SDL_USEREVENT:
 		{
 			if(event.user.code == userEventCode_MouseCheck){

@@ -16,13 +16,16 @@ PlaylistFilter::PlaylistFilter(){
 	imageExtensions.insert("gif");
 	imageExtensions.insert("png");
 	imageExtensions.insert("bmp");
+
+	archiveExtensions.insert("zip");
+	archiveExtensions.insert("rar");
 }
 
 PlaylistFilter::~PlaylistFilter(){
 }
 
 void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& propertyEventData){
-	if(ProgramOptions::Instance.skipImages){
+	if (ProgramOptions::Instance.skipImages || ProgramOptions::Instance.skipArchives){
 		std::vector<int> toRemove;
 
 		if (propertyEventData.format == MPV_FORMAT_NODE_ARRAY) {
@@ -43,7 +46,12 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 							const char* filename = propertyValue.u.string;
 							std::string ext = Util::getFileExtension(filename);
 
-							if(isImageType(ext)){
+							if (ProgramOptions::Instance.skipImages && isType(ext, imageExtensions)){
+								Util::log("toRemove: %d\n", playlistIndex);
+								toRemove.push_back(playlistIndex);
+							}
+
+							if (ProgramOptions::Instance.skipArchives && isType(ext, archiveExtensions)) {
 								Util::log("toRemove: %d\n", playlistIndex);
 								toRemove.push_back(playlistIndex);
 							}
@@ -62,12 +70,12 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 	}
 }
 
-bool PlaylistFilter::isImageType(const std::string& ext) {
+bool PlaylistFilter::isType(const std::string& ext, const std::set<std::string>& extensions) {
 	std::string lowerCaseExt = ext;
 	std::transform(lowerCaseExt.begin(), lowerCaseExt.end(), lowerCaseExt.begin(),
 		[](unsigned char c) { return std::tolower(c); });
 
-	if (imageExtensions.find(lowerCaseExt) != imageExtensions.end()) {
+	if (extensions.find(lowerCaseExt) != extensions.end()) {
 		return true;
 	}
 

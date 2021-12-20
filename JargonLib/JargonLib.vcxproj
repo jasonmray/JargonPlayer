@@ -22,7 +22,7 @@
     <ProjectGuid>{6025D305-A3F7-42C3-A810-1BF61CE12070}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>JargonLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -170,11 +170,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\Jargon\System\Event.cpp" />
     <ClCompile Include="src\Math\Utilities.cpp" />
     <ClCompile Include="src\SmartPointer.cpp" />
     <ClCompile Include="src\StringUtilities.cpp" />
     <ClCompile Include="src\System\Clipboard.cpp" />
+    <ClCompile Include="src\System\Event.cpp" />
     <ClCompile Include="src\System\Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>

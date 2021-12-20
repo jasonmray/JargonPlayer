@@ -5,6 +5,7 @@
 
 #include "Jargon/StringUtilities.h"
 #include "Jargon/System/Clipboard.h"
+#include "Jargon/System/Utilities.h"
 
 #include <libmpv/include/client.h>
 
@@ -26,8 +27,8 @@ void KeyboardInputHandler::handleInput(VideoWindow* videoWindow, mpv_handle *mpv
 
 void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *mpv, SDL_Event& event) {
 	if (event.key.keysym.mod == 0) {
-		if (event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_c) {
-			mpv_command(mpv, MpvCommands::TogglePlayPause);
+		if (event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_c || event.key.keysym.sym == SDLK_AUDIOPLAY) {
+			videoWindow->playPause();
 		} else if (event.key.keysym.sym == SDLK_LEFT) {
 			mpv_command(mpv, MpvCommands::SeekBackShort);
 		} else if (event.key.keysym.sym == SDLK_RIGHT) {
@@ -36,6 +37,8 @@ void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *m
 			mpv_command(mpv, MpvCommands::SeekBackLong);
 		} else if (event.key.keysym.sym == SDLK_PAGEDOWN) {
 			mpv_command(mpv, MpvCommands::SeekForwardLong);
+		} else if (event.key.keysym.sym == SDLK_HOME) {
+			mpv_command(mpv, MpvCommands::SeekToStart);
 		} else if (event.key.keysym.sym == SDLK_x) {
 			mpv_command(mpv, MpvCommands::SeekToStart);
 		} else if (event.key.keysym.sym == SDLK_v) {
@@ -52,10 +55,13 @@ void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *m
 			mpv_command(mpv, MpvCommands::FrameStepForward);
 		} else if (event.key.keysym.sym == SDLK_LEFTBRACKET) {
 			mpv_command(mpv, MpvCommands::SpeedDecrease);
+			mpv_command(mpv, MpvCommands::ShowSpeed);
 		} else if (event.key.keysym.sym == SDLK_RIGHTBRACKET) {
 			mpv_command(mpv, MpvCommands::SpeedIncrease);
+			mpv_command(mpv, MpvCommands::ShowSpeed);
 		} else if (event.key.keysym.sym == SDLK_BACKSLASH) {
 			mpv_command(mpv, MpvCommands::SpeedReset);
+			mpv_command(mpv, MpvCommands::ShowSpeed);
 		} else if (event.key.keysym.sym == SDLK_DOWN) {
 			mpv_command(mpv, MpvCommands::VolumeDecrease);
 		} else if (event.key.keysym.sym == SDLK_UP) {
@@ -118,8 +124,10 @@ void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *m
 			videoWindow->moveToQuadrant(QuadrantLayout::WindowQuadrant::Center);
 		} else if (event.key.keysym.sym == SDLK_t) {
 			mpv_command(mpv, MpvCommands::CycleSubtitlesUp);
+			mpv_command(mpv, MpvCommands::ShowSubtitlesTrack);
 		} else if (event.key.keysym.sym == SDLK_y) {
 			mpv_command(mpv, MpvCommands::CycleAudioTrackUp);
+			mpv_command(mpv, MpvCommands::ShowAudioTrack);
 		} else if (event.key.keysym.sym == SDLK_o) {
 			mpv_command(mpv, MpvCommands::CycleAspectRatioUp);
 			mpv_command(mpv, MpvCommands::ShowAspectRatio);
@@ -147,6 +155,9 @@ void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *m
 		if (event.key.keysym.sym == SDLK_c) {
 			std::string filename = videoWindow->getActiveFilename();
 			SDL_SetClipboardText(filename.c_str());
+		} else if (event.key.keysym.sym == SDLK_e) {
+			std::string filename = videoWindow->getActiveFilename();
+			Jargon::System::showFileInExplorer(filename.c_str());
 		} else if (event.key.keysym.sym == SDLK_LEFT) {
 			mpv_command(mpv, MpvCommands::PlaylistPrevious);
 		} else if (event.key.keysym.sym == SDLK_RIGHT) {
@@ -182,6 +193,12 @@ void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *m
 		} else if (event.key.keysym.sym == SDLK_o) {
 			mpv_command(mpv, MpvCommands::ResetAspectRatio);
 			mpv_command(mpv, MpvCommands::ShowAspectRatio);
+		} else if (event.key.keysym.sym == SDLK_8) {
+			videoWindow->resetAudioFrequency();
+		} else if (event.key.keysym.sym == SDLK_9) {
+			videoWindow->changeAudioFrequency(-5);
+		} else if (event.key.keysym.sym == SDLK_0) {
+			videoWindow->changeAudioFrequency(5);
 		}
 	} else if (event.key.keysym.mod & KMOD_SHIFT) {
 		if (event.key.keysym.sym == SDLK_LEFT) {
@@ -194,8 +211,10 @@ void KeyboardInputHandler::handleKeydown(VideoWindow* videoWindow, mpv_handle *m
 			mpv_command(mpv, MpvCommands::SeekForwardVeryLong);
 		} else if (event.key.keysym.sym == SDLK_t) {
 			mpv_command(mpv, MpvCommands::CycleSubtitlesDown);
-		} else if (event.key.keysym.sym == SDLK_t) {
+			mpv_command(mpv, MpvCommands::ShowSubtitlesTrack);
+		} else if (event.key.keysym.sym == SDLK_y) {
 			mpv_command(mpv, MpvCommands::CycleAudioTrackDown);
+			mpv_command(mpv, MpvCommands::ShowAudioTrack);
 		} else if (event.key.keysym.sym == SDLK_q) {
 			videoWindow->rotate(-1);
 		} else if (event.key.keysym.sym == SDLK_e) {

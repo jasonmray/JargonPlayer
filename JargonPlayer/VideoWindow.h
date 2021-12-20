@@ -33,7 +33,9 @@ public:
 	void enqueueFile(const char* filename);
 
 	void playPause();
+	void pause();
 	void ensureUnpaused();
+	bool isPlaying();
 	void moveToQuadrant(int displayIndex, QuadrantLayout::WindowQuadrant quadrant);
 	void moveToQuadrant(QuadrantLayout::WindowQuadrant quadrant);
 
@@ -54,6 +56,9 @@ public:
 
 	std::string getActiveFilename() const;
 
+	void changeAudioFrequency(int percentDelta);
+	void resetAudioFrequency();
+
 private:
 	static void* GetProcAddress(void *fn_ctx, const char *name);
 	static void OnMpvEvents(void *ctx);
@@ -72,6 +77,7 @@ private:
 	uint32_t wakeForMpvRedrawEventId = 0;
 	uint32_t wakeForMpvEventsEventId = 0;
 	bool zoomedToActualSize = false;
+	int audioFrequencyPercent = 100;
 
 	std::thread mpvEventThread;
 	Jargon::System::Event mpvEventsAvailable;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 class ProgramOptions{
@@ -20,6 +21,7 @@ class ProgramOptions{
 		bool sortFiles;
 		bool shuffleFiles;
 		bool skipImages;
+		bool skipArchives;
 		bool useHardwareDecoding;
-		std::vector<const char*> files;
+		std::vector<std::string> files;
 };

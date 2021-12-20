@@ -15,7 +15,7 @@ namespace StringUtilities{
 	std::string wideToUtf8(const wchar_t *wString, size_t length);
 	std::string wideToUtf8(const wchar_t *wString);
 	std::string wideToUtf8(const std::wstring& wString);
-
+	std::wstring utf8ToWide(const char* utf8string);
 }
 }
 
