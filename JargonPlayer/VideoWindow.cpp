@@ -1,5 +1,6 @@
 #include "VideoWindow.h"
 #include "MpvCommands.h"
+#include "PlaylistDisplay.h"
 #include "ProgramOptions.h"
 #include "TraceLogging.h"
 #include "Util.h"
@@ -9,6 +10,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <string>
 
 const char* VideoWindow::DefaultWindowTitle = "JargonPlayer";
@@ -30,13 +32,19 @@ VideoWindow::VideoWindow():
 	static int32_t t = true;
 	static int32_t f = false;
 	static const char* yes = "yes";
+	static const char* libmpv = "libmpv";
 
 	if(ProgramOptions::Instance.useHardwareDecoding){
 		mpv_set_property(mpv, "hwdec", MPV_FORMAT_STRING, &yes);
+		mpv_set_property(mpv, "vo", MPV_FORMAT_STRING, &libmpv);
 	}
 
 	result = mpv_initialize(mpv);
 	assert(result == 0);
+
+#ifdef _DEBUG
+	mpv_request_log_messages(mpv, "debug");
+#endif
 
 	mpv_set_option(mpv, "video-timing-offset", MPV_FORMAT_DOUBLE, &zeroD);
 	mpv_set_option(mpv, "osc", MPV_FORMAT_FLAG, &t);
@@ -58,20 +66,27 @@ VideoWindow::VideoWindow():
 
 	mpv_set_option_string(mpv, "osd-on-seek", "msg-bar");
 	mpv_set_option(mpv, "osd-level", MPV_FORMAT_INT64, &one);
-	mpv_set_option_string(mpv, "player-operation-mode", "pseudo-gui");
+	//mpv_set_option_string(mpv, "player-operation-mode", "pseudo-gui");
 	mpv_set_option_string(mpv, "keep-open", "yes");
 
 	int64_t value150 = 150;
 	mpv_set_option(mpv, "volume-max", MPV_FORMAT_INT64, &value150);
 
+	mpv_set_option(mpv, "screenshot-sw", MPV_FORMAT_STRING, &yes);
+
 	mpv_observe_property(mpv, 0, "file-format", MPV_FORMAT_STRING);
 	mpv_observe_property(mpv, 0, "playlist", MPV_FORMAT_NODE);
 
+	enableSlideshowForImages(ProgramOptions::Instance.slideshowEnabled);
+
 	mpvGLParams.get_proc_address = GetProcAddress;
+
+	static int advancedRendering = 1;
 
 	mpv_render_param params[] = {
 		{MPV_RENDER_PARAM_API_TYPE, (void*)MPV_RENDER_API_TYPE_OPENGL},
 		{MPV_RENDER_PARAM_OPENGL_INIT_PARAMS, &mpvGLParams},
+		//{MPV_RENDER_PARAM_ADVANCED_CONTROL, &advancedRendering},
 		{}
 	};
 
@@ -195,6 +210,42 @@ void VideoWindow::moveToQuadrant(QuadrantLayout::WindowQuadrant quadrant){
 	moveToQuadrant(currentDisplayIndex, quadrant);
 }
 
+void VideoWindow::moveToMonitorFullscreen(int displayIndex) {
+	moveToQuadrant(displayIndex, QuadrantLayout::WindowQuadrant::Center);
+	enterFullscreen();
+}
+
+void VideoWindow::dragWindow(int deltaX, int deltaY){
+	int currentX = 0;
+	int currentY = 0;
+	SDL_GetWindowPosition(getSDLWindow(), &currentX, &currentY);
+	SDL_SetWindowPosition(getSDLWindow(), currentX + deltaX, currentY + deltaY);
+}
+
+void VideoWindow::getClientSize(int* windowWidth, int* windowHeight) {
+	*windowWidth = 0;
+	*windowHeight = 0;
+	SDL_GetWindowSize(getSDLWindow(), windowWidth, windowHeight);
+}
+
+void VideoWindow::resizeWindow(int deltaX, int deltaY) {
+	int windowWidth;
+	int windowHeight;
+	SDL_GetWindowSize(getSDLWindow(), &windowWidth, &windowHeight);
+
+	SDL_SetWindowSize(getSDLWindow(), windowWidth + deltaX, windowHeight + deltaY);
+}
+
+void VideoWindow::resizeWindowProportional(int deltaX) {
+	int windowWidth;
+	int windowHeight;
+	SDL_GetWindowSize(getSDLWindow(), &windowWidth, &windowHeight);
+
+	int newWidth = windowWidth + deltaX;
+	int newHeight = (int)(((float)(newWidth * windowHeight) / windowWidth) + 0.5f);
+	SDL_SetWindowSize(getSDLWindow(), newWidth, newHeight);
+}
+
 void VideoWindow::zoomToActualSize(){
 	uint64_t videoWidth;
 	uint64_t videoHeight;
@@ -272,6 +323,98 @@ std::string VideoWindow::getActiveFilename() const {
 	return std::string(filename);
 }
 
+double VideoWindow::getCurrentPlaybackTime() const {
+	double playbackTime = 0;
+	if (mpv_get_property(mpv, "=time-pos", MPV_FORMAT_DOUBLE, &playbackTime) >= 0){
+		return playbackTime;
+	}
+
+	return -1.0;
+}
+
+void VideoWindow::setCurrentPlaybackPercent(double percent) {
+	mpv_set_property(mpv, "percent-pos", MPV_FORMAT_DOUBLE, &percent);
+	//mpv_command(mpv, MpvCommands::ShowProgressTime);
+	mpv_command(mpv, MpvCommands::ShowProgressBar);
+}
+
+double VideoWindow::getCurrentItemPlaybackDuration() const {
+	double itemDuration = 0;
+	if (mpv_get_property(mpv, "duration", MPV_FORMAT_DOUBLE, &itemDuration) >= 0) {
+		return itemDuration;
+	}
+
+	return 1.0;
+	
+}
+
+void VideoWindow::togglePlaylist() {
+	if (playlistDisplayed) {
+		hidePlaylist();
+	} else {
+		showPlaylist();
+	}
+}
+
+void VideoWindow::showPlaylist() {
+	mpv_node playlistNode;
+	if (mpv_get_property(mpv, "playlist", MPV_FORMAT_NODE, &playlistNode) >= 0) {
+		playlistDisplayed = true;
+
+		updatePlaylistDisplay(playlistNode);
+		mpv_free_node_contents(&playlistNode);
+	}
+}
+
+void VideoWindow::updatePlaylistDisplay(const mpv_node& playlistNode) {
+	if (!playlistDisplayed) {
+		return;
+	}
+	
+	PlaylistDisplay::DisplayPlaylist(mpv, playlistNode);
+
+	playlistDisplayed = true;
+}
+
+void VideoWindow::hidePlaylist() {
+	PlaylistDisplay::HidePlaylist(mpv);
+
+	playlistDisplayed = false;
+}
+
+void VideoWindow::showMessage(std::string message, int displayTimeMs) {
+	std::string duration = Jargon::StringUtilities::format("%d", displayTimeMs);
+
+	const char* command[] = { "expand-properties", "show-text", message.c_str(), duration.c_str(), 0};
+	mpv_command(mpv, command);
+}
+
+void VideoWindow::toggleSlideshowForImages() {
+	enableSlideshowForImages(!slideshowEnabled);
+
+	if (slideshowEnabled){
+		const char* command[] = {"show-text", "Slideshow enabled", 0};
+		mpv_command(mpv, command);
+		ensureUnpaused();
+	} else {
+		const char* command[] = {"show-text", "Slideshow disabled", 0};
+		mpv_command(mpv, command);
+		pause();
+	}
+}
+
+void VideoWindow::enableSlideshowForImages(bool enabled) {
+	if (enabled) {
+		slideshowEnabled = true;
+		const char* command[] = {"set", "image-display-duration", "3", 0};
+		mpv_command(mpv, command);
+	} else {
+		slideshowEnabled = false;
+		const char* command[] = {"set", "image-display-duration", "inf", 0};
+		mpv_command(mpv, command);
+	}
+}
+
 void VideoWindow::enterFullscreen(){
 	SDL_SetWindowFullscreen(getSDLWindow(), SDL_WINDOW_FULLSCREEN_DESKTOP);
 
@@ -292,7 +435,7 @@ void VideoWindow::changeAudioFrequency(int percentDelta) {
 void VideoWindow::resetAudioFrequency() {
 	audioFrequencyPercent = 100;
 	std::string param = Jargon::StringUtilities::format("rubberband=pitch-scale=%f", audioFrequencyPercent / 100.f);
-	mpv_set_option_string(mpv, "af", param.c_str());
+	mpv_set_option_string(mpv, "af", ""/*param.c_str()*/);
 }
 
 void VideoWindow::exitFullscreen(){
@@ -364,7 +507,7 @@ void VideoWindow::processMpvEvents(){
 				//mpv_command(mpv, MpvCommands::ShowProgressTime);
 				//mpv_command(mpv, MpvCommands::ShowProgressBar);
 			}else if(mp_event->event_id == MPV_EVENT_SEEK){
-				mpv_command(mpv, MpvCommands::ShowProgressTime);
+				//mpv_command(mpv, MpvCommands::ShowProgressTime);
 				mpv_command(mpv, MpvCommands::ShowProgressBar);
 			}else if(mp_event->event_id == MPV_EVENT_FILE_LOADED){
 				const char* filename = mpv_get_property_string(mpv, "filename");
@@ -396,14 +539,14 @@ void VideoWindow::processMpvEvents(){
 					
 					const mpv_node& node = *(mpv_node*)propertyData->data;
 					playlistFilter.handlePlaylistChange(mpv, node);
+
+					updatePlaylistDisplay(node);
 				}
 			}else if(mp_event->event_id == MPV_EVENT_SHUTDOWN){
 				return;
-			}
-			{
-				std::string msg = Jargon::StringUtilities::format("%s", mpv_event_name(mp_event->event_id));
-				const char* args[] = {"show-text", msg.c_str(), 0};
-				//mpv_command(mpv, args);
+			}else if (mp_event->event_id == MPV_EVENT_LOG_MESSAGE) {
+				const mpv_event_log_message* message = reinterpret_cast<mpv_event_log_message*>(mp_event->data);
+				Util::log("MPV LOG: %s [%s] %s\n", message->level, message->prefix, message->text);
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 #include "Jargon/StringUtilities.h"
 
 #include <libmpv/include/client.h>
-#include <algorithm>
+
 #include <cctype>
 #include <vector>
 
@@ -16,6 +16,7 @@ PlaylistFilter::PlaylistFilter(){
 	imageExtensions.insert("gif");
 	imageExtensions.insert("png");
 	imageExtensions.insert("bmp");
+	imageExtensions.insert("webp");
 
 	archiveExtensions.insert("zip");
 	archiveExtensions.insert("rar");
@@ -49,9 +50,7 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 							if (ProgramOptions::Instance.skipImages && isType(ext, imageExtensions)){
 								Util::log("toRemove: %d\n", playlistIndex);
 								toRemove.push_back(playlistIndex);
-							}
-
-							if (ProgramOptions::Instance.skipArchives && isType(ext, archiveExtensions)) {
+							} else if (ProgramOptions::Instance.skipArchives && isType(ext, archiveExtensions)) {
 								Util::log("toRemove: %d\n", playlistIndex);
 								toRemove.push_back(playlistIndex);
 							}
@@ -72,8 +71,7 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 
 bool PlaylistFilter::isType(const std::string& ext, const std::set<std::string>& extensions) {
 	std::string lowerCaseExt = ext;
-	std::transform(lowerCaseExt.begin(), lowerCaseExt.end(), lowerCaseExt.begin(),
-		[](unsigned char c) { return std::tolower(c); });
+	Jargon::StringUtilities::tolower(lowerCaseExt);
 
 	if (extensions.find(lowerCaseExt) != extensions.end()) {
 		return true;

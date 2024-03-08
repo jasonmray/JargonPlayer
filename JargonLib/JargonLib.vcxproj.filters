@@ -51,6 +51,12 @@
     <ClCompile Include="src\System\Event.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tri.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\Power.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Jargon\Null.h">
@@ -115,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="include\Jargon\System\Clipboard.h">
       <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\System\Power.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\Tri.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

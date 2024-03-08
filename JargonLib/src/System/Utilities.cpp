@@ -4,6 +4,7 @@
 
 #ifdef _WIN32
 	#include "Jargon/System/WindowsDefines.h"
+	#include "Jargon/StringUtilities.h"
 	#include <windows.h>
 	#include <shlobj_core.h>
 	#include <shlwapi.h>
@@ -78,6 +79,44 @@ namespace System{
 			}while (FindNextFileW(findHandle, &findFileData));
 
 			FindClose(findHandle);
+		}
+
+		std::string getClockTimeForCurrentUserLocale() {
+			wchar_t buff[128] = { 0 };
+			GetTimeFormat(LOCALE_USER_DEFAULT, 0, NULL, NULL, buff, 128);
+			return Jargon::StringUtilities::wideToUtf8(buff);
+		}
+
+		std::string getUserScreenshotsFolderPath() {
+			DWORD flags = 0;
+			PWSTR widePath;
+
+			HRESULT result = SHGetKnownFolderPath(FOLDERID_Screenshots, 0, NULL, &widePath);
+
+			if (result != S_OK) {
+				result = SHGetKnownFolderPath(FOLDERID_SavedPictures, 0, NULL, &widePath);
+			}
+
+			if (result != S_OK) {
+				result = SHGetKnownFolderPath(FOLDERID_CameraRoll, 0, NULL, &widePath);
+			}
+
+			if (result != S_OK) {
+				result = SHGetKnownFolderPath(FOLDERID_Pictures, 0, NULL, &widePath);
+			}
+			
+			if (result != S_OK) {
+				result = SHGetKnownFolderPath(FOLDERID_Documents, 0, NULL, &widePath);
+			}
+
+			if (result != S_OK) {
+				result = SHGetKnownFolderPath(FOLDERID_Desktop, 0, NULL, &widePath);
+			}
+
+			std::string path = Jargon::StringUtilities::wideToUtf8(widePath);
+			CoTaskMemFree(widePath);
+
+			return path;
 		}
 	#endif
 }

@@ -16,6 +16,8 @@ namespace MpvCommands{
 	const char* SeekForwardLong[] = {"osd-bar", "seek", "30", 0};
 	const char* SeekBackVeryLong[] = {"osd-bar", "seek", "-60", 0};
 	const char* SeekForwardVeryLong[] = {"osd-bar", "seek", "60", 0};
+	const char* SeekBackSuperLong[] = { "osd-bar", "seek", "-300", 0 };
+	const char* SeekForwardSuperLong[] = { "osd-bar", "seek", "300", 0 };
 	const char* SeekToStart[] = {"osd-bar", "seek", "0", "absolute", 0};
 	const char* Stop[] = {"osd-bar", "stop", 0};
 	const char* FrameStepForward[] = {"osd-bar", "frame-step", 0};
@@ -28,8 +30,13 @@ namespace MpvCommands{
 	const char* VolumeIncrease[] = {"osd-bar", "add", "volume", "2", 0};
 	const char* MuteToggle[] = {"osd-bar", "cycle", "mute", 0};
 	const char* GammaDecrease[] = {"osd-bar", "add", "gamma", "-1", 0};
-	const char* GammaIncrease[] = {"add", "gamma", "1", 0};
-	const char* GammaReset[] = {"set", "gamma", "0", 0};
+	const char* GammaIncrease[] = { "osd-bar", "add", "gamma", "1", 0 };
+	const char* GammaReset[] = { "osd-bar", "set", "gamma", "0", 0 };
+	const char* ShowGamma[] = { "expand-properties", "show-text", "Gamma: ${gamma}", 0 };
+	const char* GammaFactorDecrease[] = { "osd-bar", "add", "gamma-factor", "-0.1", 0 };
+	const char* GammaFactorIncrease[] = { "osd-bar", "add", "gamma-factor", "0.1", 0 };
+	const char* GammaFactorReset[] = { "osd-bar", "set", "gamma-factor", "1.0", 0 };
+	const char* ShowGammaFactor[] = { "expand-properties", "show-text", "Gamma: ${gamma-factor}", 0 };
 	const char* BrightnessDecrease[] = {"osd-bar", "add", "brightness", "-1", 0};
 	const char* BrightnessIncrease[] = {"osd-bar", "add", "brightness", "1", 0};
 	const char* BrightnessReset[] = {"osd-bar", "set", "brightness", "0", 0};
@@ -44,8 +51,9 @@ namespace MpvCommands{
 	const char* ZoomReset[] = {"set", "video-zoom", "0", 0};
 	const char* PlaylistNext[] = {"playlist-next", 0};
 	const char* PlaylistPrevious[] = {"playlist-prev", 0};
-	const char* ShowProgressTime[] = {"expand-properties", "show-text", "${time-pos} / ${time-remaining}", 0};
-	const char* ShowProgressBar[] = {"show-progress", 0};
+	const char* PlaylistRestart[] = { "playlist-play-index", "0", 0 };
+	const char* ShowProgressTime[] = { "osd-msg-bar", "expand-properties", "show-text", "${time-pos} / ${time-remaining}", 0 };
+	const char* ShowProgressBar[] = { "osd-msg-bar", "show-progress", 0 };
 	const char* ShowMuteStatus[] = {"expand-properties", "show-text", "MUTE: ${mute}", 0};
 	const char* CycleSubtitlesUp[] = {"cycle", "sub", "up", 0};
 	const char* CycleSubtitlesDown[] = {"cycle", "sub", "down", 0};
@@ -66,4 +74,10 @@ namespace MpvCommands{
 	const char* CycleAspectRatioDown[] = {"cycle_values", "!reverse", "aspect", "16:9", "4:3", "2.35:1", "-1", 0};
 	const char* ResetAspectRatio[] = {"set", "aspect", "-1", 0};
 	const char* ShowAspectRatio[] = {"expand-properties", "show-text", "Aspect Ratio: ${aspect}", 0};
+	const char* CycleColorTemp[] = { "cycle_values", "vf", "colortemperature=temperature=5500", "colortemperature=temperature=6500", "colortemperature=temperature=9300", "", 0 };
+	const char* PanAudioLeft[] = { "set", "af", "pan=[stereo|c0=c0+0.5*c1|c1=0.5*c1]", 0 };
+	const char* PanAudioRight[] = { "set", "af", "pan=[stereo|c0=0.5*c0|c1=c1+0.5*c0]", 0 };
+	const char* ResetAudioPan[] = { "set", "af", "", 0 };
+	const char* CycleSubtitleBackgroundColor[] = { "cycle_values", "sub-back-color", "#FF000000", "#00000000", 0 };
+	const char* ShufflePlaylist[] = {"playlist-shuffle", 0};
 };

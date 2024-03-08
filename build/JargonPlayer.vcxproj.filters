@@ -67,6 +67,18 @@
     <ClInclude Include="..\JargonPlayer\WindowsDpiFix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\JargonPlayer\Screenshots.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JargonPlayer\DeviceStatus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JargonPlayer\PlaylistDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JargonPlayer\WebcamEnumerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\JargonPlayer\main.cpp">
@@ -115,6 +127,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\JargonPlayer\WindowsDpiFix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JargonPlayer\Screenshots.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JargonPlayer\DeviceStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JargonPlayer\PlaylistDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\JargonPlayer\WebcamEnumerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

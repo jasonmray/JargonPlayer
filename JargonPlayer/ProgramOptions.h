@@ -22,6 +22,8 @@ class ProgramOptions{
 		bool shuffleFiles;
 		bool skipImages;
 		bool skipArchives;
+		bool slideshowEnabled;
 		bool useHardwareDecoding;
+		bool startFullscreen;
 		std::vector<std::string> files;
 };

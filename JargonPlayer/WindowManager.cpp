@@ -67,6 +67,8 @@ void WindowManager::pumpEvents(){
 				playPauseAll();
 			} else if(event.key.keysym.sym == SDLK_n && event.key.keysym.mod & KMOD_CTRL){
 				createWindow();
+			} else if (event.key.keysym.sym == SDLK_AUDIOPLAY || event.key.keysym.sym == SDL_SCANCODE_AUDIOSTOP) {
+				playPauseAll();
 			}
 		} else if(event.type == SDL_DROPBEGIN){
 			this->processingDragAndDrop = true;

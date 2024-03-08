@@ -6,6 +6,8 @@
 #include "VideoWindow.h"
 #include "WindowManager.h"
 
+#include "Jargon/System/WindowsMemoryLeakHelpers.h"
+
 #include <algorithm>
 #include <vector>
 
@@ -85,12 +87,18 @@ int appmain(int argc, const char *argv[]){
 				window->enqueueFile(programOptions.files[i].c_str());
 			}
 		}
+
+		if (programOptions.startFullscreen) {
+			window->enterFullscreen();
+		}
 	}
 
 	windowManager.pumpEvents();
 	
 	SDL_EnableScreenSaver();
 	SDL_GameControllerClose(gameController);
+
+	JARGON_WINDOWS_DUMP_MEMORY_LEAKS();
 
 	return 0;
 }

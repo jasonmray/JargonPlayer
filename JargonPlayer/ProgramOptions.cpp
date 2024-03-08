@@ -1,7 +1,9 @@
 #include "ProgramOptions.h"
+#include "WebcamEnumerator.h"
 #include "Util.h"
 
 #include "Jargon/System/Utilities.h"
+#include "Jargon/StringUtilities.h"
 
 #include <algorithm>
 #include <ctime>
@@ -15,7 +17,9 @@ ProgramOptions::ProgramOptions() :
 	shuffleFiles(false),
 	skipImages(false),
 	skipArchives(false),
-	useHardwareDecoding(true)
+	slideshowEnabled(true),
+	useHardwareDecoding(true),
+	startFullscreen(false)
 {
 }
 
@@ -41,8 +45,15 @@ bool ProgramOptions::processOptions(int argc, const char *argv[]) {
 				this->skipImages = true;
 			} else if (Util::stringEqualCaseInsensitive(optionName, "skiparchives")) {
 				this->skipArchives = true;
+			} else if (Util::stringEqualCaseInsensitive(optionName, "noslideshow")) {
+				this->slideshowEnabled = false;
 			} else if (Util::stringEqualCaseInsensitive(optionName, "disablehwdec")) {
 				this->useHardwareDecoding = false;
+			} else if (Util::stringEqualCaseInsensitive(optionName, "fullscreen")) {
+				this->startFullscreen = true;
+			} else if (Util::stringEqualCaseInsensitive(optionName, "webcam")) {
+				WebcamEnumerator webcamEnumerator;
+				webcamEnumerator.enumerateWebcamUrls(this->files);
 			} else {
 				return false;
 			}
@@ -53,12 +64,11 @@ bool ProgramOptions::processOptions(int argc, const char *argv[]) {
 			} else{
 				this->files.push_back(filename);
 			}
-
 		}
 	}
 
 	if (this->sortFiles) {
-		std::sort(this->files.begin(), this->files.end());
+		std::sort(this->files.begin(), this->files.end(), Jargon::StringUtilities::caseInsensitiveSortFunctor);
 	} else if (this->shuffleFiles) {
 		std::random_device randomDevice;
 		std::srand(randomDevice());

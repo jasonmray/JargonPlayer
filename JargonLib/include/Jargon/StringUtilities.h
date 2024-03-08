@@ -16,6 +16,14 @@ namespace StringUtilities{
 	std::string wideToUtf8(const wchar_t *wString);
 	std::string wideToUtf8(const std::wstring& wString);
 	std::wstring utf8ToWide(const char* utf8string);
+
+	void tolower(std::string& s);
+
+	// use for case-insensitive sort:
+	//    std::sort(x.begin(), x.end(), Jargon::StringUtilities::caseInsensitiveSortFunctor);
+	bool caseInsensitiveSortFunctor(const std::string& s1, const std::string& s2);
+
+	bool caseInsensitiveSortFunctorReverse(const std::string& s1, const std::string& s2);
 }
 }
 

@@ -13,5 +13,6 @@ class MouseInputHandler{
 		void handleInput(VideoWindow* videoWindow, mpv_handle *mpv, SDL_Event& event);
 
 	private:
-
+		int previousMouseX = 0;
+		int previousMouseY = 0;
 };

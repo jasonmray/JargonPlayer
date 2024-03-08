@@ -38,6 +38,11 @@ public:
 	bool isPlaying();
 	void moveToQuadrant(int displayIndex, QuadrantLayout::WindowQuadrant quadrant);
 	void moveToQuadrant(QuadrantLayout::WindowQuadrant quadrant);
+	void moveToMonitorFullscreen(int displayIndex);
+	void dragWindow(int deltaX, int deltaY);
+	void getClientSize(int* windowWidth, int* windowHeight);
+	void resizeWindow(int deltaX, int deltaY);
+	void resizeWindowProportional(int deltaX);
 
 	void enterFullscreen();
 	void exitFullscreen();
@@ -55,6 +60,17 @@ public:
 	void rotate(double delta);
 
 	std::string getActiveFilename() const;
+	double getCurrentPlaybackTime() const;
+	void setCurrentPlaybackPercent(double percent);
+	double getCurrentItemPlaybackDuration() const;
+
+	void showPlaylist();
+	void hidePlaylist();
+	void togglePlaylist();
+	void showMessage(std::string message, int displayTimeMs = 5000);
+
+	void toggleSlideshowForImages();
+	void enableSlideshowForImages(bool enabled);
 
 	void changeAudioFrequency(int percentDelta);
 	void resetAudioFrequency();
@@ -71,13 +87,17 @@ private:
 
 	void processMpvEvents();
 
+	void updatePlaylistDisplay(const mpv_node& playlistNode);
+
 	mpv_handle *mpv = nullptr;
 	mpv_render_context *mpvGLRenderContext = nullptr;
 	mpv_opengl_init_params mpvGLParams = {};
 	uint32_t wakeForMpvRedrawEventId = 0;
 	uint32_t wakeForMpvEventsEventId = 0;
+	bool slideshowEnabled = true;
 	bool zoomedToActualSize = false;
 	int audioFrequencyPercent = 100;
+	bool playlistDisplayed = false;
 
 	std::thread mpvEventThread;
 	Jargon::System::Event mpvEventsAvailable;

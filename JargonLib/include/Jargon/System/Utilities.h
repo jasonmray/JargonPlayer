@@ -13,6 +13,8 @@ namespace System{
 	void showFileInExplorer(const char * path);
 	void notifyDisplayInUse(bool inUse);
 	void globFiles(const char * pattern, std::vector<std::string>& files);
+	std::string getClockTimeForCurrentUserLocale();
+	std::string getUserScreenshotsFolderPath();
 }
 }
 

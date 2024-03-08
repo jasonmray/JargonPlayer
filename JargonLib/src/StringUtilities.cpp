@@ -1,6 +1,9 @@
 
 #include "Jargon/Null.h"
 #include "Jargon/StringUtilities.h"
+
+#include <algorithm>
+
 #include <windows.h>
 
 namespace Jargon{
@@ -50,6 +53,18 @@ namespace StringUtilities{
 		MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, utf8string, -1, &wideString[0], destSize);
 
 		return wideString;
+	}
+
+	void tolower(std::string& s) {
+		std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+	}
+
+	bool caseInsensitiveSortFunctor(const std::string& s1, const std::string& s2) {
+		return _stricmp(s1.c_str(), s2.c_str()) < 0;
+	}
+
+	bool caseInsensitiveSortFunctorReverse(const std::string& s1, const std::string& s2) {
+		return !caseInsensitiveSortFunctor(s1, s2);
 	}
 
 }

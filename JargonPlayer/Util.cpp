@@ -3,6 +3,7 @@
 #include "Jargon/StringUtilities.h"
 
 #include <libmpv/include/client.h>
+#include <ctime>
 #include <windows.h>
 
 
@@ -17,6 +18,32 @@ namespace Util{
 		return pathString;
 	}
 
+	std::string getBaseFilenameNoExt(const char* path) {
+		std::string pathString = path;
+		size_t slashIndex = pathString.find_last_of("/\\");
+		if (slashIndex != std::string::npos) {
+			pathString.erase(0, slashIndex + 1);
+		}
+
+		size_t dotIndex = pathString.find_last_of(".");
+		if (dotIndex != std::string::npos) {
+			pathString.erase(dotIndex, pathString.length());
+		}
+
+		return pathString;
+	}
+
+	std::string getPathAndFilenameNoExt(const char* path) {
+		std::string pathString = path;
+
+		size_t dotIndex = pathString.find_last_of(".");
+		if (dotIndex != std::string::npos) {
+			pathString.erase(dotIndex, pathString.length());
+		}
+
+		return pathString;
+	}
+
 	std::string getFileExtension(const char* path) {
 		std::string pathString = path;
 		size_t dotIndex = pathString.find_last_of(".");
@@ -24,6 +51,15 @@ namespace Util{
 			pathString.erase(0, dotIndex + 1);
 		}
 		return pathString;
+	}
+
+	std::string createDateTimeSecondString() {
+		std::time_t t = std::time(nullptr);
+		char timeStringBuffer[100] = {0};
+		std::tm localTime = {0};
+		localtime_s(&localTime, &t);
+		std::strftime(timeStringBuffer, sizeof(timeStringBuffer), "%Y%m%d_%H%M%S", &localTime);
+		return std::string(timeStringBuffer);
 	}
 
 	void log(const char * formatString, ...) {

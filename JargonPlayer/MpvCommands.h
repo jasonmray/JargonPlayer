@@ -15,6 +15,8 @@ namespace MpvCommands{
 	const char* SeekForwardLong[];
 	const char* SeekBackVeryLong[];
 	const char* SeekForwardVeryLong[];
+	const char* SeekBackSuperLong[];
+	const char* SeekForwardSuperLong[];
 	const char* SeekToStart[];
 	const char* Stop[];
 	const char* FrameStepForward[];
@@ -29,6 +31,11 @@ namespace MpvCommands{
 	const char* GammaDecrease[];
 	const char* GammaIncrease[];
 	const char* GammaReset[];
+	const char* ShowGamma[];
+	const char* GammaFactorDecrease[];
+	const char* GammaFactorIncrease[];
+	const char* GammaFactorReset[];
+	const char* ShowGammaFactor[];
 	const char* BrightnessDecrease[];
 	const char* BrightnessIncrease[];
 	const char* BrightnessReset[];
@@ -43,6 +50,7 @@ namespace MpvCommands{
 	const char* ZoomReset[];
 	const char* PlaylistNext[];
 	const char* PlaylistPrevious[];
+	const char* PlaylistRestart[];
 	const char* ShowProgressTime[];
 	const char* ShowProgressBar[];
 	const char* ShowMuteStatus[];
@@ -65,4 +73,10 @@ namespace MpvCommands{
 	const char* CycleAspectRatioDown[];
 	const char* ResetAspectRatio[];
 	const char* ShowAspectRatio[];
+	const char* CycleColorTemp[];
+	const char* PanAudioLeft[];
+	const char* PanAudioRight[];
+	const char* ResetAudioPan[];
+	const char* CycleSubtitleBackgroundColor[];
+	const char* ShufflePlaylist[];
 };
