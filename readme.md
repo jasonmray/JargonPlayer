@@ -112,7 +112,7 @@ Since it is built around libmpv JargonPlayer supports all the media formats of M
 
 ## Building
 
-The project should build cleanly with Visual Studio 2017.
+The project should build cleanly with Visual Studio 2022.
 1. Unzip the dependencies in 3rdParty.zip
 2. Open `build\JargonPlayer.sln`
 3. Build Release x64
