@@ -1,8 +1,6 @@
 #ifndef JARGON_SCOPEDPOINTER_H
 #define JARGON_SCOPEDPOINTER_H
 
-#include "Null.h"
-
 #include <algorithm>
 #include <atomic>
 #include <cassert>
@@ -41,11 +39,11 @@ namespace Jargon{
 	class ScopedPointer{
 		public:
 			ScopedPointer(){
-				m_target = NULL;
+				m_target = nullptr;
 			}
 
 			ScopedPointer(std::nullptr_t n){
-				m_target = NULL;
+				m_target = nullptr;
 			}
 
 			template<class T>
@@ -53,18 +51,28 @@ namespace Jargon{
 				this->m_target = target;
 			}
 
-
 			~ScopedPointer(){
 				releaseTarget();
 			}
-
 
 			TargetClass * getRaw() const{
 				return m_target;
 			}
 
+			TargetClass*& getRef() {
+				return m_target;
+			}
+
+			TargetClass** addressOf() {
+				return &m_target;
+			}
+
 			bool isNull() const{
-				return m_target == NULL;
+				return m_target == nullptr;
+			}
+
+			operator bool() const {
+				return !isNull();
 			}
 
 			template<class T>
@@ -76,10 +84,15 @@ namespace Jargon{
 				std::swap(m_target, other.m_target);
 			}
 
-			void reset(){
-				swapTarget(NULL);
+			TargetClass* releaseOwnership() {
+				TargetClass* toReturn = m_target;
+				m_target = nullptr;
+				return toReturn;
 			}
 
+			void reset(){
+				swapTarget(nullptr);
+			}
 
 			template<class T>
 			ScopedPointer<TargetClass, ReleasePolicyClass> & operator=( T * toCopy ){
@@ -87,18 +100,15 @@ namespace Jargon{
 				return *this;
 			}
 
-
 			TargetClass & operator*() const{
-				assert(m_target != NULL);
+				assert(m_target != nullptr);
 				return *m_target;
 			}
 
 			TargetClass * operator->() const{
-				assert(m_target != NULL);
+				assert(m_target != nullptr);
 				return m_target;
 			}
-
-
 
 			bool operator==(const ScopedPointer & other) const {
 				return m_target == other.m_target;
@@ -158,13 +168,135 @@ namespace Jargon{
 			TargetClass * m_target;
 
 			void releaseTarget(){
-				if( m_target != NULL ){
+				if( m_target != nullptr ){
 					ReleasePolicyClass::Release(m_target);
-					m_target = NULL;
+					m_target = nullptr;
 				}
 			}
 
 			void swapTarget(TargetClass * newTarget){
+				releaseTarget();
+				m_target = newTarget;
+			}
+	};
+
+	template<class ReleasePolicyClass>
+	class ScopedPointer<void, ReleasePolicyClass>{
+		public:
+			ScopedPointer(){
+				m_target = nullptr;
+			}
+
+			ScopedPointer(std::nullptr_t n){
+				m_target = nullptr;
+			}
+
+			template<class T>
+			explicit ScopedPointer(T * target){
+				this->m_target = target;
+			}
+
+			~ScopedPointer(){
+				releaseTarget();
+			}
+
+			void * getRaw() const{
+				return m_target;
+			}
+
+			bool isNull() const{
+				return m_target == nullptr;
+			}
+
+			template<class T>
+			void set(T * other){
+				this->operator=(other);
+			}
+
+			void swap(ScopedPointer<void, ReleasePolicyClass> & other){
+				std::swap(m_target, other.m_target);
+			}
+
+			void reset(){
+				swapTarget(nullptr);
+			}
+
+			template<class T>
+			ScopedPointer<void, ReleasePolicyClass> & operator=( T * toCopy ){
+				swapTarget(toCopy);
+				return *this;
+			}
+
+			void* operator->() const{
+				assert(m_target != nullptr);
+				return m_target;
+			}
+
+			bool operator==(const ScopedPointer & other) const {
+				return m_target == other.m_target;
+			}
+
+			template<class T>
+			bool operator==(const T * pointer) const {
+				return m_target == pointer;
+			}
+
+			bool operator!=(const ScopedPointer & other) const {
+				return m_target != other.m_target;
+			}
+
+			template<class T>
+			bool operator!=(const T * pointer) const {
+				return m_target != pointer;
+			}
+
+			bool operator<(const ScopedPointer & other) const {
+				return m_target < other.m_target;
+			}
+
+			template<class T>
+			bool operator<(const T * pointer) const {
+				return m_target < pointer;
+			}
+
+			bool operator>(const ScopedPointer & other) const {
+				return m_target > other.m_target;
+			}
+
+			template<class T>
+			bool operator>(const T * pointer) const {
+				return m_target > pointer;
+			}
+
+			bool operator<=(const ScopedPointer & other) const {
+				return m_target <= other.m_target;
+			}
+
+			template<class T>
+			bool operator<=(const T * pointer) const {
+				return m_target <= pointer;
+			}
+
+			bool operator>=(const ScopedPointer & other) const {
+				return m_target >= other.m_target;
+			}
+
+			template<class T>
+			bool operator>=(const T * pointer) const {
+				return m_target >= pointer;
+			}
+
+		private:
+			void* m_target;
+
+			void releaseTarget(){
+				if( m_target != nullptr ){
+					ReleasePolicyClass::Release(m_target);
+					m_target = nullptr;
+				}
+			}
+
+			void swapTarget(void* newTarget){
 				releaseTarget();
 				m_target = newTarget;
 			}

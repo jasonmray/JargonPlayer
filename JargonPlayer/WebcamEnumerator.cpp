@@ -2,6 +2,7 @@
 #include "WebcamEnumerator.h"
 
 #include "Jargon/StringUtilities.h"
+#include "Jargon/System/WindowsDefines.h"
 
 #include <windows.h>
 #include <dshow.h>

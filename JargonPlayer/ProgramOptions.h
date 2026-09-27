@@ -12,18 +12,25 @@ class ProgramOptions{
 			Tile
 		};
 
+		enum class WindowMode {
+			Normal,
+			Fullscreen,
+			Maximized
+		};
+
 		ProgramOptions();
 		~ProgramOptions();
 
 		bool processOptions(int argc, const char *argv[]);
 
 		OpenMode openMode;
+		WindowMode windowMode;
 		bool sortFiles;
 		bool shuffleFiles;
 		bool skipImages;
 		bool skipArchives;
 		bool slideshowEnabled;
 		bool useHardwareDecoding;
-		bool startFullscreen;
+		
 		std::vector<std::string> files;
 };

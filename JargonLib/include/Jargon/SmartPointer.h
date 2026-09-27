@@ -35,8 +35,8 @@ namespace Jargon{
 
 		protected:
 			ReferenceCountableBase();
-			ReferenceCountableBase(const ReferenceCountableBase &); // not implemented
-			ReferenceCountableBase & operator=(const ReferenceCountableBase &); // not implemented
+			ReferenceCountableBase(const ReferenceCountableBase &) = delete;
+			ReferenceCountableBase & operator=(const ReferenceCountableBase &) = delete;
 
 		private:
 			mutable size_t m_count;
@@ -55,8 +55,8 @@ namespace Jargon{
 
 		protected:
 			AtomicReferenceCountableBase();
-			AtomicReferenceCountableBase(const AtomicReferenceCountableBase &); // not implemented
-			AtomicReferenceCountableBase & operator=(const AtomicReferenceCountableBase &); // not implemented
+			AtomicReferenceCountableBase(const AtomicReferenceCountableBase&) = delete;
+			AtomicReferenceCountableBase & operator=(const AtomicReferenceCountableBase &) = delete;
 
 		private:
 			mutable std::atomic_size_t m_count;
@@ -82,6 +82,14 @@ namespace Jargon{
 		public:
 			SmartPointer(){
 				m_target = NULL;
+			}
+
+			SmartPointer(ReferenceCountableClass* object) {
+				acquireTarget(object);
+			}
+
+			SmartPointer(std::nullptr_t nullPointer) {
+				m_target = nullPointer;
 			}
 
 			SmartPointer( const SmartPointer<ReferenceCountableClass, ReleasePolicyClass> &toCopy ){
@@ -154,12 +162,20 @@ namespace Jargon{
 				return *m_target;
 			}
 
-			ReferenceCountableClass * operator->() const{
+			ReferenceCountableClass * operator->() const {
 				assert(m_target != NULL);
 				return m_target;
 			}
 
+			template<class ChildClass>
+			SmartPointer<ChildClass, ReleasePolicyClass> as() const {
+				return SmartPointer<ChildClass, ReleasePolicyClass>(dynamic_cast<ChildClass*>(m_target));
+			}
 
+			template<class AnyClass>
+			AnyClass* asRaw() const {
+				return (AnyClass*)m_target;
+			}
 
 			bool operator==(const SmartPointer & other) const {
 				return m_target == other.m_target;

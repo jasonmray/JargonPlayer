@@ -7,11 +7,14 @@
 #include "Jargon/System/Utilities.h"
 
 
-std::string DeviceStatus::BuildDeviceStatusString(VideoWindow* videoWindow) {
-	std::string filename = videoWindow->getActiveFilename();
-	std::string time = Jargon::System::getClockTimeForCurrentUserLocale();
-	std::string power = BuildPowerStatusString();
-	return Jargon::StringUtilities::format("%s\n%s\n%s", filename.c_str(), time.c_str(), power.c_str());
+std::string DeviceStatus::BuildDeviceStatusString(const VideoWindow& videoWindow) {
+	const std::string filename = videoWindow.getActiveFilename();
+	const std::string time = Jargon::System::getClockTimeForCurrentUserLocale();
+	const std::string power = BuildPowerStatusString();
+
+	const int playbackTimeRemainingSeconds = (int)videoWindow.getPlaybackTimeRemaining();
+	const std::string remainingTimeString = Util::formatSeconds_HMS(playbackTimeRemainingSeconds);
+	return Jargon::StringUtilities::format("\\N\\N%s\n%s\n%s remaining in current file\n%s", filename.c_str(), time.c_str(), remainingTimeString.c_str(), power.c_str());
 }
 
 std::string DeviceStatus::BuildPowerStatusString() {
@@ -36,7 +39,7 @@ std::string DeviceStatus::BuildPowerStatusString() {
 
 		std::string timeStatus = "";
 		if (devicePowerState.batteryRemainingSeconds != -1) {
-			std::string remainingString = FormatSeconds(devicePowerState.batteryRemainingSeconds);
+			std::string remainingString = Util::formatSeconds_HMS(devicePowerState.batteryRemainingSeconds);
 			timeStatus = Jargon::StringUtilities::format(" %s remaining", remainingString.c_str());
 		}
 
@@ -47,23 +50,4 @@ std::string DeviceStatus::BuildPowerStatusString() {
 	}
 
 	return "";
-}
-
-std::string DeviceStatus::FormatSeconds(int totalSeconds) {
-	if (totalSeconds < 60) {
-		return Jargon::StringUtilities::format("%is", totalSeconds);
-	}
-	else if (totalSeconds < 60 * 60) {
-		int seconds = totalSeconds % 60;
-		int minutes = totalSeconds / 60;
-		return Jargon::StringUtilities::format("%im%is", minutes, seconds);
-	}
-	else {
-		int seconds = totalSeconds % 60;
-		int minutes = totalSeconds / 60;
-		int hours = minutes / 60;
-		minutes = minutes % 60;
-
-		return Jargon::StringUtilities::format("%ih%im%is", hours, minutes, seconds);
-	}
 }

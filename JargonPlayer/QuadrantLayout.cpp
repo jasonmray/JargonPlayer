@@ -16,4 +16,14 @@ namespace QuadrantLayout{
 				return Rect{height / 4, width / 4, width / 2, height / 2};
 		}
 	}
+
+	Bounds rectToBounds(const Rect& r) {
+		Bounds b;
+		b.x1 = r.left;
+		b.x2 = r.left + r.width;
+		b.y1 = r.top;
+		b.y2 = r.top + r.height;
+
+		return b;
+	}
 }

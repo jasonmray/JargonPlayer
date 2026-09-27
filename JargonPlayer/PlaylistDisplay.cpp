@@ -1,21 +1,86 @@
 #include "PlaylistDisplay.h"
 #include "Util.h"
 
+#include "Jargon/FileSystem/Utilities.h"
 #include "Jargon/StringUtilities.h"
 
-#include <libmpv/include/client.h>
-
-#include <string>
+#include <mpv/client.h>
 
 
-void PlaylistDisplay::DisplayPlaylist(mpv_handle* mpv, const mpv_node& playlistNode) {
+class AssEventsBuilder {
+	public:
+		AssEventsBuilder(std::string& assEventsString) : 
+			assEventsString(assEventsString)
+		{
+		}
+
+		void emptyLine() {
+			appendRaw(defaultFontString);
+			assEventsString.append("\\N");
+		}
+
+		void writeNewline() {
+			assEventsString.append("\\N");
+		}
+
+		void writeFontCommand(int fontSize) {
+			appendRawFmt("{\\fs%d}", fontSize);
+		}
+
+		void writeFontCommand(int fontSize, bool bold) {
+			appendRawFmt("{\\b%d\\fs%d}", bold ? 1 : 0, fontSize);
+		}
+
+		void appendRaw(const char* raw) {
+			assEventsString.append(raw);
+		}
+
+		void appendLine(int fontSize, const char* formatString, ...) {
+			va_list args;
+			va_start(args, formatString);
+			writeFontCommand(fontSize);
+			appendRawVarArgs(formatString, args);
+			writeNewline();
+			va_end(args);
+		}
+
+		void appendLine(const char* formatString, ...) {
+			va_list args;
+			va_start(args, formatString);
+			appendRaw(defaultFontString);
+			appendRawVarArgs(formatString, args);
+			writeNewline();
+			va_end(args);
+		}
+
+	private:
+		int defaultFontSize = 25;
+		const char* defaultFontString = "{\\fs25}";
+		std::string& assEventsString;
+
+		void appendRawFmt(const char* formatString, ...) {
+			va_list args;
+			va_start(args, formatString);
+			appendRawVarArgs(formatString, args);
+			va_end(args);
+		}
+
+		void appendRawVarArgs(const char* formatString, va_list args) {
+			std::string s = Jargon::StringUtilities::formatVarArgs(formatString, args);
+			assEventsString.append(s);
+		}
+};
+
+void PlaylistDisplay::BuildPlaylistData(mpv_handle* mpv, const mpv_node& playlistNode, std::string& assEventsOut) {
+	assEventsOut.clear();
+
+	AssEventsBuilder assEventsBuilder(assEventsOut);
 
 	if (playlistNode.format == MPV_FORMAT_NODE_ARRAY) {
 		const mpv_node_list* playlist = playlistNode.u.list;
 
-		std::string listString;
-		listString.append("{\\fs25} \\N");
-		listString.append("{\\fs25} \\N");
+		assEventsBuilder.emptyLine();
+		assEventsBuilder.emptyLine();
 
 		int64_t currentPlaylistPos = -1;
 		mpv_get_property(mpv, "playlist-pos", MPV_FORMAT_INT64, &currentPlaylistPos);
@@ -24,7 +89,7 @@ void PlaylistDisplay::DisplayPlaylist(mpv_handle* mpv, const mpv_node& playlistN
 			currentPlaylistPos = 0;
 		}
 
-		const int maxPlaylistDisplayItems = 12;
+		const int maxPlaylistDisplayItems = 20;
 		const int playlistLength = playlist->num;
 
 		int displayStartIndex = 0;
@@ -48,17 +113,13 @@ void PlaylistDisplay::DisplayPlaylist(mpv_handle* mpv, const mpv_node& playlistN
 		const int displayEndIndex = displayStartIndex + numItemsToDisplay;
 
 		if (playlistLength == 0) {
-			listString.append("No Items");
-		}
-		else {
-
+			assEventsBuilder.appendLine("No Items");
+		} else {
 
 			if (displayStartIndex > 0) {
-				const std::string precedingString = Jargon::StringUtilities::format("{\\fs25}... %d more items ...\\N", displayStartIndex);
-				listString.append(precedingString);
-			}
-			else {
-				listString.append("{\\fs25} \\N");
+				assEventsBuilder.appendLine("... %d more items ...", displayStartIndex);
+			} else {
+				assEventsBuilder.emptyLine();
 			}
 
 			for (int i = 0; i < numItemsToDisplay; i++) {
@@ -86,104 +147,22 @@ void PlaylistDisplay::DisplayPlaylist(mpv_handle* mpv, const mpv_node& playlistN
 					}
 
 					if (filename != nullptr) {
+						assEventsBuilder.writeFontCommand(25, isCurrent);
+
 						if (isCurrent) {
-							listString.append("{\\b1\\fs25} > ");
-						}
-						else {
-							listString.append("{\\b0\\fs25}");
+							assEventsBuilder.appendRaw(" > ");
 						}
 
-						const std::string number = Jargon::StringUtilities::format("[%d]  ", playlistIndex);
-						listString.append(number);
-
-						const std::string baseFilename = Util::getBaseFilename(filename);
-						listString.append(baseFilename);
-						listString.append("\n");
+						const std::string baseFilename(Jargon::FileSystem::getFilenameComponent(filename));
+						assEventsBuilder.appendLine("[%d]  %s", playlistIndex, baseFilename.c_str());
 					}
 				}
 			}
 
 			if (displayEndIndex < playlistLength) {
 				const int remainingItems = playlistLength - displayEndIndex;
-				const std::string remainingString = Jargon::StringUtilities::format("{\\fs25}... %d more items ...\\N", remainingItems);
-				listString.append(remainingString);
+				assEventsBuilder.appendLine("... %d more items ...", remainingItems);
 			}
 		}
-
-		//		const char* command[] = {"osd-overlay", "99", "ass-events", listString.c_str(), 0};
-		//		mpv_command(mpv, command);
-
-		mpv_node        node;
-		mpv_node_list   list;
-		char* keys[4];
-		mpv_node        values[4];
-		mpv_node        result;
-
-		node.format = MPV_FORMAT_NODE_MAP;
-		node.u.list = &list;
-
-		list.values = values;
-		list.keys = keys;
-		list.num = 4;
-
-		keys[0] = (char*)"name";
-		values[0].format = MPV_FORMAT_STRING;
-		values[0].u.string = (char*)"osd-overlay";
-
-		keys[1] = (char*)"id";
-		values[1].format = MPV_FORMAT_INT64;
-		values[1].u.int64 = PlaylistOverlayId;
-
-		keys[2] = (char*)"format";
-		values[2].format = MPV_FORMAT_STRING;
-		values[2].u.string = (char*)"ass-events";
-
-		keys[3] = (char*)"data";
-		values[3].format = MPV_FORMAT_STRING;
-		values[3].u.string = (char*)listString.c_str();
-
-		mpv_command_node(mpv, &node, &result);
-
 	}
-}
-
-
-void PlaylistDisplay::HidePlaylist(mpv_handle* mpv) {
-	//const char* command[] = { "osd-overlay", "99", "none", 0 };
-	//mpv_command(mpv, command);
-	//
-	const char* command2[] = { "overlay-remove", "99", 0 };
-	mpv_command(mpv, command2);
-
-
-	mpv_node        node;
-	mpv_node_list   list;
-	char* keys[5];
-	mpv_node        values[5];
-	mpv_node        result;
-
-	node.format = MPV_FORMAT_NODE_MAP;
-	node.u.list = &list;
-
-	list.values = values;
-	list.keys = keys;
-	list.num = 4;
-
-	keys[0] = (char*)"name";
-	values[0].format = MPV_FORMAT_STRING;
-	values[0].u.string = (char*)"osd-overlay";
-
-	keys[1] = (char*)"id";
-	values[1].format = MPV_FORMAT_INT64;
-	values[1].u.int64 = PlaylistOverlayId;
-
-	keys[2] = (char*)"format";
-	values[2].format = MPV_FORMAT_STRING;
-	values[2].u.string = (char*)"ass-events";
-
-	keys[3] = (char*)"data";
-	values[3].format = MPV_FORMAT_STRING;
-	values[3].u.string = (char*)"";
-
-	mpv_command_node(mpv, &node, &result);
 }

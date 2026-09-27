@@ -1,5 +1,6 @@
 
 #include "Jargon/System/Event.h"
+#include "Jargon/System/WindowsDefines.h"
 #include <windows.h>
 #include <system_error>
 
@@ -36,13 +37,13 @@ namespace System{
 
 	void Event::set() {
 		if (!SetEvent(eventHandle)) {
-			throw new std::system_error(std::make_error_code(std::errc::timed_out), "wait for event failed");
+			throw new std::system_error(std::make_error_code(std::errc::invalid_argument), "set event failed");
 		}
 	}
 
 	void Event::reset() {
 		if (!ResetEvent(eventHandle)) {
-			throw new std::system_error(std::make_error_code(std::errc::timed_out), "wait for event failed");
+			throw new std::system_error(std::make_error_code(std::errc::invalid_argument), "reset event failed");
 		}
 	}
 }

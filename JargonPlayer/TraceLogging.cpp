@@ -3,7 +3,8 @@
 #include <memory>
 
 
-#ifdef JARGONPLAYER_TRACELOGGING_ENABLED
+#if JARGONPLAYER_TRACELOGGING_ENABLED
+	#include "Jargon/System/WindowsDefines.h"
 	#include <windows.h>
 	#include <TraceLoggingProvider.h>  // The native windows TraceLogging API
 #else

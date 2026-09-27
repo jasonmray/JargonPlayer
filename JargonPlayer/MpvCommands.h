@@ -25,6 +25,10 @@ namespace MpvCommands{
 	const char* SpeedIncrease[];
 	const char* SpeedReset[];
 	const char* ShowSpeed[];
+	const char* ImageDurationDecrease[];
+	const char* ImageDurationIncrease[];
+	const char* ImageDurationReset[];
+	const char* ShowImageDuration[];
 	const char* VolumeDecrease[];
 	const char* VolumeIncrease[];
 	const char* MuteToggle[];

@@ -25,11 +25,29 @@
     <Filter Include="Source Files\System">
       <UniqueIdentifier>{8239fc5e-97fd-47f0-8598-6ba95a960a40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Advanced">
-      <UniqueIdentifier>{b2ba4e59-993b-4093-9fd6-46517a03fff9}</UniqueIdentifier>
+    <Filter Include="Header Files\DataStructures">
+      <UniqueIdentifier>{a88ddcb0-1284-4aae-9b12-0842c8cdb94b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Advanced\impl">
-      <UniqueIdentifier>{32700ddc-b749-4df0-977a-3e7f2710b163}</UniqueIdentifier>
+    <Filter Include="Source Files\DataStructures">
+      <UniqueIdentifier>{2bcc9326-8d23-4ddc-8735-04d93d5e5ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileFormats">
+      <UniqueIdentifier>{79b7fae9-dd41-4052-88c4-20213403f783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileFormats\Ini">
+      <UniqueIdentifier>{21a5ffc8-b719-48d3-a20b-21d1076bb60d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FileFormats">
+      <UniqueIdentifier>{aa1818d5-cc86-432a-a6ea-ddfbabc1eb27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FileFormats\Ini">
+      <UniqueIdentifier>{0789d96f-fcfa-4c32-bd1a-dafd3723e1b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FileSystem">
+      <UniqueIdentifier>{427b1544-b350-48a7-8bf8-e5645511e4ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileSystem">
+      <UniqueIdentifier>{b617a365-ebce-48da-8866-4b896e1bd354}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +72,106 @@
     <ClCompile Include="src\Tri.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\DataStructures\NaryTree.cpp">
+      <Filter>Source Files\DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileFormats\Ini\Comment.cpp">
+      <Filter>Source Files\FileFormats\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileFormats\Ini\IniFile.cpp">
+      <Filter>Source Files\FileFormats\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileFormats\Ini\Section.cpp">
+      <Filter>Source Files\FileFormats\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileFormats\Ini\Setting.cpp">
+      <Filter>Source Files\FileFormats\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileFormats\Ini\Whitespace.cpp">
+      <Filter>Source Files\FileFormats\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\ByteSwapping.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryStreamReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryReaderObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileFormats\Ini\IniElement.cpp">
+      <Filter>Source Files\FileFormats\Ini</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NumberParsing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryWriterObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryStreamWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\BinaryFileReader.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\BinaryFileWriter.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\Utilities.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
     <ClCompile Include="src\System\Power.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BufferReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UTF8Validation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BinaryFileHandleWriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\DirectoryListing.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\WindowsFileFinder.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ErrorContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\FileSystemWalker.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\FileSystemVisitor.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\WindowsUtilities.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\Semaphore.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StreamUtilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\System\ComUtilities.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FileSystem\WindowsShell.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugLog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Stopwatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,23 +209,11 @@
     <ClInclude Include="include\Jargon\StlUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Jargon\Advanced\TaskQueue.h">
-      <Filter>Header Files\Advanced</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Jargon\Advanced\impl\PocoTaskQueue.h">
-      <Filter>Header Files\Advanced\impl</Filter>
-    </ClInclude>
     <ClInclude Include="include\Jargon\Macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Jargon\Advanced\Task.h">
-      <Filter>Header Files\Advanced</Filter>
-    </ClInclude>
     <ClInclude Include="include\Jargon\System\WindowsMemoryLeakHelpers.h">
       <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Jargon\Advanced\CollectingMutex.h">
-      <Filter>Header Files\Advanced</Filter>
     </ClInclude>
     <ClInclude Include="include\Jargon\StringUtilities.h">
       <Filter>Header Files</Filter>
@@ -126,6 +231,120 @@
       <Filter>Header Files\System</Filter>
     </ClInclude>
     <ClInclude Include="include\Jargon\Tri.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\DataStructures\NaryTree.h">
+      <Filter>Header Files\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Comment.h">
+      <Filter>Header Files\FileFormats\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileFormats\Ini\IniFile.h">
+      <Filter>Header Files\FileFormats\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Section.h">
+      <Filter>Header Files\FileFormats\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Setting.h">
+      <Filter>Header Files\FileFormats\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Whitespace.h">
+      <Filter>Header Files\FileFormats\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\System\ByteSwapping.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BinaryStreamReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BinaryReaderObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\TextReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileFormats\Ini\IniElement.h">
+      <Filter>Header Files\FileFormats\Ini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\StringParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\NumberParsing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\TextWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BinaryWriterObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BinaryStreamWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\BinaryFileWriter.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\BinaryFileReader.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\Utilities.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BufferReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\UTF8Validation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BinaryFileHandleWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\DirectoryListing.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\WindowsFileFinder.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\ErrorContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\FileSystemWalker.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\FileSystemVisitor.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\DataStructures\PagedArray.h">
+      <Filter>Header Files\DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\System\WindowsUtilities.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\Delegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\System\Semaphore.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\StreamUtilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\System\ComUtilities.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\StringBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\BufferObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\FileSystem\WindowsShell.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Jargon\DebugLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

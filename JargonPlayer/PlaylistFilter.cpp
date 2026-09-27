@@ -2,9 +2,11 @@
 #include "ProgramOptions.h"
 #include "Util.h"
 
+#include "Jargon/DebugLog.h"
+#include "Jargon/FileSystem/Utilities.h"
 #include "Jargon/StringUtilities.h"
 
-#include <libmpv/include/client.h>
+#include <mpv/client.h>
 
 #include <cctype>
 #include <vector>
@@ -45,13 +47,13 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 						Util::debugLog(propertyName, propertyValue);
 						if (std::string("filename") == propertyName) {
 							const char* filename = propertyValue.u.string;
-							std::string ext = Util::getFileExtension(filename);
+							const std::string ext(Jargon::FileSystem::getFileExtension(filename));
 
 							if (ProgramOptions::Instance.skipImages && isType(ext, imageExtensions)){
-								Util::log("toRemove: %d\n", playlistIndex);
+								Jargon::debugLog("toRemove: %d\n", playlistIndex);
 								toRemove.push_back(playlistIndex);
 							} else if (ProgramOptions::Instance.skipArchives && isType(ext, archiveExtensions)) {
-								Util::log("toRemove: %d\n", playlistIndex);
+								Jargon::debugLog("toRemove: %d\n", playlistIndex);
 								toRemove.push_back(playlistIndex);
 							}
 						}
@@ -63,7 +65,7 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 		for (auto it = toRemove.rbegin(); it != toRemove.rend(); ++it) {
 			std::string indexString = Jargon::StringUtilities::format("%i", *it);
 			const char* command[] = {"playlist-remove", indexString.c_str(), 0};
-			Util::log("removing playlist item %d\n", *it);
+			Jargon::debugLog("removing playlist item %d\n", *it);
 			mpv_command(mpv, command);
 		}
 	}
@@ -71,7 +73,7 @@ void PlaylistFilter::handlePlaylistChange(mpv_handle* mpv, const mpv_node& prope
 
 bool PlaylistFilter::isType(const std::string& ext, const std::set<std::string>& extensions) {
 	std::string lowerCaseExt = ext;
-	Jargon::StringUtilities::tolower(lowerCaseExt);
+	Jargon::StringUtilities::toLower(lowerCaseExt);
 
 	if (extensions.find(lowerCaseExt) != extensions.end()) {
 		return true;

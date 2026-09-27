@@ -5,7 +5,7 @@
 
 #include "Jargon/Math/Utilities.h"
 
-#include <libmpv/include/client.h>
+#include <mpv/client.h>
 
 #include <cstdint>
 
@@ -35,12 +35,24 @@ void GamepadInputHandler::handleControllerButton(VideoWindow* videoWindow, mpv_h
 		mpv_command(mpv, MpvCommands::PlaylistNext);
 	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_LEFTSHOULDER) {
 		mpv_command(mpv, MpvCommands::PlaylistPrevious);
-	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_Y) {
-		videoWindow->enterFullscreen();
 	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_B) {
-		SDL_SetWindowFullscreen(videoWindow->getSDLWindow(), 0);
-	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_BACK) {
+		videoWindow->toggleFullscreen();
+	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_X) {
 		videoWindow->resetZoom();
+	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_START) {
+		videoWindow->getOverlayManager().toggleOverlay(mpv, OverlayType_Playlist);
+	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_UP) {
+		mpv_command(mpv, MpvCommands::CycleSubtitlesUp);
+		mpv_command(mpv, MpvCommands::ShowSubtitlesTrack);
+	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_DOWN) {
+		mpv_command(mpv, MpvCommands::CycleSubtitlesDown);
+		mpv_command(mpv, MpvCommands::ShowSubtitlesTrack);
+	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_LEFT) {
+		mpv_command(mpv, MpvCommands::CycleAudioTrackDown);
+		mpv_command(mpv, MpvCommands::ShowAudioTrack);
+	} else if (event.cbutton.button == SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+		mpv_command(mpv, MpvCommands::CycleAudioTrackUp);
+		mpv_command(mpv, MpvCommands::ShowAudioTrack);
 	}
 }
 

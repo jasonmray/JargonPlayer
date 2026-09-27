@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sdl/include/SDL.h>
+#include <SDL.h>
 
 struct mpv_handle;
 class VideoWindow;
@@ -13,6 +13,7 @@ class MouseInputHandler{
 		void handleInput(VideoWindow* videoWindow, mpv_handle *mpv, SDL_Event& event);
 
 	private:
-		int previousMouseX = 0;
-		int previousMouseY = 0;
+		bool dragging = false;
+		int dragStartClientX = 0;  // location of window drag start, in client coordinates
+		int dragStartClientY = 0;
 };

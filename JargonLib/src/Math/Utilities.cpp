@@ -15,5 +15,6 @@ namespace Math{
 	int16_t rangeMap(int16_t val, int16_t sourceMin, int16_t sourceMax, int16_t destMin, int16_t destMax){
 		return (int16_t)((val - sourceMin) * (destMax - destMin) / (float)(sourceMax - sourceMin) + destMin + 0.5f);
 	}
+
 }
 }

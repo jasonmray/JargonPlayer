@@ -1,38 +1,54 @@
-
-#include "Jargon/StringUtilities.h"
 #include "Jargon/System/Utilities.h"
+#include "Jargon/StringUtilities.h"
+#include "Jargon/FileSystem/Utilities.h"
 
 #ifdef _WIN32
 	#include "Jargon/System/WindowsDefines.h"
-	#include "Jargon/StringUtilities.h"
 	#include <windows.h>
 	#include <shlobj_core.h>
 	#include <shlwapi.h>
 	#include <WinBase.h>
+	#include <debugapi.h>
 #endif
 
 #include <algorithm>
+#include <cassert>
 #include <thread>
 
 namespace Jargon{
 namespace System{
 
 	#ifdef _WIN32
+
+		void waitForDebugger() {
+			while (!IsDebuggerPresent()) {
+				sleep(100);
+			}
+		}
+
 		void sleep(unsigned int milliseconds){
 			Sleep(milliseconds);
 		}
 
 		unsigned int getHardwareConcurrencyCount(){
-			return std::thread::hardware_concurrency();
+			unsigned int count = std::thread::hardware_concurrency();
+			if (count == 0) {
+				count = 1;
+			}
+			return count;
 		}
 
 		void showFileInExplorer(const char * path) {
 			std::wstring widePath = Jargon::StringUtilities::utf8ToWide(path);
 			std::replace(widePath.begin(), widePath.end(), '/', '\\');
 
+			// if the path begins with "\\?\" for windows long-path support, SHParseDisplayName
+			// will fail with E_INVALIDARG. advance past that prefix if it is present.
+			const wchar_t* displayNameToParse = Jargon::FileSystem::skipLongPathPrefix(widePath);
+
 			PIDLIST_ABSOLUTE pidl = 0;
 			SFGAOF flags = 0;
-			SHParseDisplayName(widePath.c_str(), NULL, &pidl, 0, &flags);
+			HRESULT result = SHParseDisplayName(displayNameToParse, NULL, &pidl, 0, &flags);
 			try {
 				// Open Explorer and select the thing
 				SHOpenFolderAndSelectItems(pidl, 0, NULL, 0);
@@ -50,35 +66,6 @@ namespace System{
 			} else {
 				SetThreadExecutionState(ES_CONTINUOUS);
 			}
-		}
-
-		void globFiles(const char * pattern, std::vector<std::string>& files) {
-			std::wstring patternWide = Jargon::StringUtilities::utf8ToWide(pattern);
-
-			std::wstring directory;
-			{
-				wchar_t directoryBuffer[MAX_PATH] = {0};
-				wchar_t* filepart = nullptr;
-				if (GetFullPathNameW(patternWide.c_str(), MAX_PATH, directoryBuffer, &filepart) != 0) {
-					directory = std::wstring(directoryBuffer, filepart);
-				}
-			}
-
-			WIN32_FIND_DATAW findFileData = {0};
-			HANDLE findHandle = FindFirstFileExW(patternWide.c_str(), FindExInfoStandard, &findFileData, FindExSearchNameMatch, NULL, 0);
-
-			if (findHandle == INVALID_HANDLE_VALUE) {
-				return;
-			}
-
-			do {
-				wchar_t fullPath[MAX_PATH] = {0};
-				if(PathCombineW(fullPath, directory.c_str(), findFileData.cFileName) != nullptr){
-					files.push_back(Jargon::StringUtilities::wideToUtf8(fullPath));
-				}
-			}while (FindNextFileW(findHandle, &findFileData));
-
-			FindClose(findHandle);
 		}
 
 		std::string getClockTimeForCurrentUserLocale() {
@@ -118,6 +105,58 @@ namespace System{
 
 			return path;
 		}
+
+		bool getApplicationPath(std::string* pathOut) {
+			wchar_t path[1024];
+			int numCharsFilled = GetModuleFileNameW(nullptr, path, sizeof(path) / sizeof(wchar_t));
+
+			if(numCharsFilled == 0){
+				return false;
+			}
+
+			*pathOut = Jargon::StringUtilities::wideToUtf8(path);
+			return true;
+		}
+
+		bool getApplicationFolder(std::string* folderOut) {
+			std::string applicationPath;
+			if (!getApplicationPath(&applicationPath)) {
+				return false;
+			}
+
+			*folderOut = Jargon::FileSystem::getPathComponent(applicationPath.c_str());
+			return true;
+		}
 	#endif
+
+		std::string getHumanReadableSizeBytes(uint64_t sizeBytes) {
+			const char prefixes[] = "BKMGTPE";
+			const char maxPrefixIndex = 6;
+
+			int magnitude = 0;
+			uint64_t value = sizeBytes;
+			uint64_t denominator = 1;
+			while (value >= 1024 && magnitude <= maxPrefixIndex) {
+				value /= 1024;
+				denominator *= 1024;
+				magnitude++;
+			}
+
+			// note: this effectively truncates the fractional part instead of rounding,
+			// but the result matches e.g. Windows Explorer.
+			const uint64_t remainder = ((sizeBytes * 100) / denominator) % 100;
+
+			const char prefix = prefixes[magnitude];
+
+			if (magnitude == 0) {
+				return Jargon::StringUtilities::format("%d %c", (int)value, prefix);
+			} else {
+				return Jargon::StringUtilities::format("%d.%02d %cB", (int)value, (int)remainder, prefix);
+			}
+		}
+
+		void getHumanReadableSizeBytes(uint64_t sizeBytes, std::string& stringOut) {
+			stringOut = getHumanReadableSizeBytes(sizeBytes);
+		}
 }
 }

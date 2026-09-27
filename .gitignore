@@ -1,4 +1,6 @@
-JargonLib/x64
-build/.vs
-build/x64
-release
+.vs/
+bin/
+release/
+releases/
+*.user
+TraceLogging/*.etl

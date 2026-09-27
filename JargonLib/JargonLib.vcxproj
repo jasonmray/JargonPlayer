@@ -72,26 +72,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\intermediate\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\intermediate\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\intermediate\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\intermediate\$(ProjectName)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)_$(Platform)\</OutDir>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -103,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <AssemblerListingLocation>$(IntDir)/%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,6 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <AssemblerListingLocation>$(IntDir)/%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +149,7 @@
       <SDLCheck>true</SDLCheck>
       <AssemblerListingLocation>$(IntDir)/%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,6 +173,7 @@
       <SDLCheck>true</SDLCheck>
       <AssemblerListingLocation>$(IntDir)/%(RelativeDir)</AssemblerListingLocation>
       <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,39 +186,106 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BinaryFileHandleWriter.cpp" />
+    <ClCompile Include="src\BinaryStreamReader.cpp" />
+    <ClCompile Include="src\BinaryReaderObject.cpp" />
+    <ClCompile Include="src\BinaryStreamWriter.cpp" />
+    <ClCompile Include="src\BinaryWriterObject.cpp" />
+    <ClCompile Include="src\BufferReader.cpp" />
+    <ClCompile Include="src\DataStructures\NaryTree.cpp" />
+    <ClCompile Include="src\DebugLog.cpp" />
+    <ClCompile Include="src\ErrorContext.cpp" />
+    <ClCompile Include="src\FileFormats\Ini\Comment.cpp" />
+    <ClCompile Include="src\FileFormats\Ini\IniFile.cpp" />
+    <ClCompile Include="src\FileFormats\Ini\Section.cpp" />
+    <ClCompile Include="src\FileFormats\Ini\Setting.cpp" />
+    <ClCompile Include="src\FileFormats\Ini\IniElement.cpp" />
+    <ClCompile Include="src\FileFormats\Ini\Whitespace.cpp" />
+    <ClCompile Include="src\FileSystem\BinaryFileReader.cpp" />
+    <ClCompile Include="src\FileSystem\BinaryFileWriter.cpp" />
+    <ClCompile Include="src\FileSystem\DirectoryListing.cpp" />
+    <ClCompile Include="src\FileSystem\FileSystemVisitor.cpp" />
+    <ClCompile Include="src\FileSystem\FileSystemWalker.cpp" />
+    <ClCompile Include="src\FileSystem\Utilities.cpp" />
+    <ClCompile Include="src\FileSystem\WindowsFileFinder.cpp" />
+    <ClCompile Include="src\FileSystem\WindowsShell.cpp" />
     <ClCompile Include="src\Math\Utilities.cpp" />
+    <ClCompile Include="src\NumberParsing.cpp" />
     <ClCompile Include="src\SmartPointer.cpp" />
+    <ClCompile Include="src\Stopwatch.cpp" />
+    <ClCompile Include="src\StreamUtilities.cpp" />
     <ClCompile Include="src\StringUtilities.cpp" />
+    <ClCompile Include="src\System\ByteSwapping.cpp" />
     <ClCompile Include="src\System\Clipboard.cpp" />
+    <ClCompile Include="src\System\ComUtilities.cpp" />
     <ClCompile Include="src\System\Event.cpp" />
     <ClCompile Include="src\System\Power.cpp" />
+    <ClCompile Include="src\System\Semaphore.cpp" />
     <ClCompile Include="src\System\Utilities.cpp" />
+    <ClCompile Include="src\System\WindowsUtilities.cpp" />
+    <ClCompile Include="src\TextReader.cpp" />
+    <ClCompile Include="src\TextWriter.cpp" />
     <ClCompile Include="src\Tri.cpp" />
+    <ClCompile Include="src\UTF8Validation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Jargon\Advanced\CollectingMutex.h" />
-    <ClInclude Include="include\Jargon\Advanced\impl\PocoTaskQueue.h" />
-    <ClInclude Include="include\Jargon\Advanced\Task.h" />
-    <ClInclude Include="include\Jargon\Advanced\TaskQueue.h" />
+    <ClInclude Include="include\Jargon\BinaryFileHandleWriter.h" />
+    <ClInclude Include="include\Jargon\BinaryStreamReader.h" />
+    <ClInclude Include="include\Jargon\BinaryReaderObject.h" />
+    <ClInclude Include="include\Jargon\BinaryStreamWriter.h" />
+    <ClInclude Include="include\Jargon\BinaryWriterObject.h" />
+    <ClInclude Include="include\Jargon\Buffer.h" />
+    <ClInclude Include="include\Jargon\BufferObject.h" />
+    <ClInclude Include="include\Jargon\BufferReader.h" />
+    <ClInclude Include="include\Jargon\DataStructures\NaryTree.h" />
+    <ClInclude Include="include\Jargon\DataStructures\PagedArray.h" />
+    <ClInclude Include="include\Jargon\DebugLog.h" />
+    <ClInclude Include="include\Jargon\Delegate.h" />
+    <ClInclude Include="include\Jargon\ErrorContext.h" />
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Comment.h" />
+    <ClInclude Include="include\Jargon\FileFormats\Ini\IniFile.h" />
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Section.h" />
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Setting.h" />
+    <ClInclude Include="include\Jargon\FileFormats\Ini\IniElement.h" />
+    <ClInclude Include="include\Jargon\FileFormats\Ini\Whitespace.h" />
+    <ClInclude Include="include\Jargon\FileSystem\BinaryFileReader.h" />
+    <ClInclude Include="include\Jargon\FileSystem\BinaryFileWriter.h" />
+    <ClInclude Include="include\Jargon\FileSystem\DirectoryListing.h" />
+    <ClInclude Include="include\Jargon\FileSystem\FileSystemVisitor.h" />
+    <ClInclude Include="include\Jargon\FileSystem\FileSystemWalker.h" />
+    <ClInclude Include="include\Jargon\FileSystem\Utilities.h" />
+    <ClInclude Include="include\Jargon\FileSystem\WindowsFileFinder.h" />
+    <ClInclude Include="include\Jargon\FileSystem\WindowsShell.h" />
     <ClInclude Include="include\Jargon\Functional.h" />
     <ClInclude Include="include\Jargon\IteratorRange.h" />
     <ClInclude Include="include\Jargon\Macros.h" />
     <ClInclude Include="include\Jargon\Math\LinearFunction.h" />
     <ClInclude Include="include\Jargon\Math\Utilities.h" />
     <ClInclude Include="include\Jargon\Null.h" />
+    <ClInclude Include="include\Jargon\NumberParsing.h" />
     <ClInclude Include="include\Jargon\ProviderObject.h" />
     <ClInclude Include="include\Jargon\ScopedPointer.h" />
     <ClInclude Include="include\Jargon\SmartPointer.h" />
     <ClInclude Include="include\Jargon\StlUtilities.h" />
     <ClInclude Include="include\Jargon\Stopwatch.h" />
+    <ClInclude Include="include\Jargon\StreamUtilities.h" />
+    <ClInclude Include="include\Jargon\StringBuffer.h" />
+    <ClInclude Include="include\Jargon\StringParser.h" />
     <ClInclude Include="include\Jargon\StringUtilities.h" />
+    <ClInclude Include="include\Jargon\System\ByteSwapping.h" />
     <ClInclude Include="include\Jargon\System\Clipboard.h" />
+    <ClInclude Include="include\Jargon\System\ComUtilities.h" />
     <ClInclude Include="include\Jargon\System\Event.h" />
     <ClInclude Include="include\Jargon\System\Power.h" />
+    <ClInclude Include="include\Jargon\System\Semaphore.h" />
     <ClInclude Include="include\Jargon\System\Utilities.h" />
     <ClInclude Include="include\Jargon\System\WindowsDefines.h" />
     <ClInclude Include="include\Jargon\System\WindowsMemoryLeakHelpers.h" />
+    <ClInclude Include="include\Jargon\System\WindowsUtilities.h" />
+    <ClInclude Include="include\Jargon\TextReader.h" />
+    <ClInclude Include="include\Jargon\TextWriter.h" />
     <ClInclude Include="include\Jargon\Tri.h" />
+    <ClInclude Include="include\Jargon\UTF8Validation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

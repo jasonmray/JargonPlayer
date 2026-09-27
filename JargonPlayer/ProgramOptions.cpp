@@ -2,7 +2,7 @@
 #include "WebcamEnumerator.h"
 #include "Util.h"
 
-#include "Jargon/System/Utilities.h"
+#include "Jargon/FileSystem/Utilities.h"
 #include "Jargon/StringUtilities.h"
 
 #include <algorithm>
@@ -13,13 +13,13 @@ ProgramOptions ProgramOptions::Instance;
 
 ProgramOptions::ProgramOptions() :
 	openMode(OpenMode::Enqueue),
+	windowMode(WindowMode::Normal),
 	sortFiles(true),
 	shuffleFiles(false),
 	skipImages(false),
 	skipArchives(false),
 	slideshowEnabled(true),
-	useHardwareDecoding(true),
-	startFullscreen(false)
+	useHardwareDecoding(true)
 {
 }
 
@@ -30,28 +30,30 @@ bool ProgramOptions::processOptions(int argc, const char *argv[]) {
 	for (int i = 1; i < argc; i++) {
 		if (argv[i][0] == '-' || argv[i][0] == '/') {
 			const char* optionName = &(argv[i][1]);
-			if (Util::stringEqualCaseInsensitive(optionName, "tile")) {
+			if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "tile")) {
 				this->openMode = OpenMode::Tile;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "enqueue")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "enqueue")) {
 				this->openMode = OpenMode::Enqueue;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "sort")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "sort")) {
 				this->sortFiles = true;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "nosort")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "nosort")) {
 				this->sortFiles = false;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "shuffle")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "shuffle")) {
 				this->sortFiles = false;
 				this->shuffleFiles = true;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "skipimages")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "skipimages")) {
 				this->skipImages = true;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "skiparchives")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "skiparchives")) {
 				this->skipArchives = true;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "noslideshow")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "noslideshow")) {
 				this->slideshowEnabled = false;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "disablehwdec")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "disablehwdec")) {
 				this->useHardwareDecoding = false;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "fullscreen")) {
-				this->startFullscreen = true;
-			} else if (Util::stringEqualCaseInsensitive(optionName, "webcam")) {
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "fullscreen")) {
+				this->windowMode = WindowMode::Fullscreen;
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "maximize")) {
+				this->windowMode = WindowMode::Maximized;
+			} else if (Jargon::StringUtilities::stringEqualCaseInsensitive(optionName, "webcam")) {
 				WebcamEnumerator webcamEnumerator;
 				webcamEnumerator.enumerateWebcamUrls(this->files);
 			} else {
@@ -60,7 +62,7 @@ bool ProgramOptions::processOptions(int argc, const char *argv[]) {
 		} else {
 			const char * filename = argv[i];
 			if (strchr(filename, '*') != nullptr || strchr(filename, '?') != nullptr) {
-				Jargon::System::globFiles(filename, this->files);
+				Jargon::FileSystem::globFiles(filename, this->files);
 			} else{
 				this->files.push_back(filename);
 			}
@@ -71,8 +73,8 @@ bool ProgramOptions::processOptions(int argc, const char *argv[]) {
 		std::sort(this->files.begin(), this->files.end(), Jargon::StringUtilities::caseInsensitiveSortFunctor);
 	} else if (this->shuffleFiles) {
 		std::random_device randomDevice;
-		std::srand(randomDevice());
-		std::random_shuffle(this->files.begin(), this->files.end());
+		std::default_random_engine randomGenerator(randomDevice());
+		std::shuffle(this->files.begin(), this->files.end(), randomGenerator);
 	}
 
 	return true;

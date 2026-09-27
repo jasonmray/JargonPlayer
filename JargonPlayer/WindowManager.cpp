@@ -60,14 +60,17 @@ void WindowManager::pumpEvents(){
 			// Clear Numlock modifier for all key inputs.
 			event.key.keysym.mod &= ~KMOD_NUM;
 
-			if(event.key.keysym.sym == SDLK_q && event.key.keysym.mod & KMOD_CTRL){
+			const bool ctrlPressed = event.key.keysym.mod & KMOD_CTRL;
+			const SDL_Keycode& key = event.key.keysym.sym;
+
+			if(key == SDLK_q && ctrlPressed){
 				closeAll();
 				return;
-			} else if(event.key.keysym.sym == SDLK_SPACE && event.key.keysym.mod & KMOD_CTRL){
+			} else if(key == SDLK_SPACE && ctrlPressed){
 				playPauseAll();
-			} else if(event.key.keysym.sym == SDLK_n && event.key.keysym.mod & KMOD_CTRL){
+			} else if(key == SDLK_n && ctrlPressed){
 				createWindow();
-			} else if (event.key.keysym.sym == SDLK_AUDIOPLAY || event.key.keysym.sym == SDL_SCANCODE_AUDIOSTOP) {
+			} else if (key == SDLK_AUDIOPLAY || event.key.keysym.scancode == SDL_SCANCODE_AUDIOSTOP) {
 				playPauseAll();
 			}
 		} else if(event.type == SDL_DROPBEGIN){

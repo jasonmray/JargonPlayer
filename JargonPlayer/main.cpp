@@ -25,6 +25,12 @@ INT WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nC
 
 	LocalFree(argvW);
 
+	if (argvS.size() > 1 && argvS[1] == "-debug") {
+		while (!::IsDebuggerPresent()) {
+			::Sleep(100);
+		}
+	}
+
 	WindowsDpiFix::FixWindowsDpiHandling();
 
 	int returnCode = appmain(argc, argv.data());

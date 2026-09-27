@@ -1,6 +1,9 @@
 #pragma once
 
-#include <sdl/include/SDL.h>
+#include "QuadrantLayout.h"
+
+#include <SDL.h>
+
 
 class SdlWindow{
 public:
@@ -14,6 +17,26 @@ public:
 	void close();
 
 	void handleEvent(SDL_Event& event);
+
+	void toggleFullscreen();
+	void enterFullscreen();
+	void exitFullscreen();
+	void minimize();
+
+	QuadrantLayout::Bounds getWindowBounds();
+	void setWindowPosition(int screenX, int screenY);
+	void dragWindow(int deltaX, int deltaY);
+	void getClientSize(int* windowWidth, int* windowHeight);
+	void clientToScreen(int* x, int* y);
+	void screenToClient(int* x, int* y);
+	void resizeWindow(int deltaX, int deltaY);
+	void resizeWindowProportional(int deltaX);
+
+	void maximize();
+	void moveToQuadrant(int displayIndex, QuadrantLayout::WindowQuadrant quadrant);
+	void moveToQuadrant(QuadrantLayout::WindowQuadrant quadrant);
+	void moveToMonitorFullscreen(int displayIndex);
+	void tryPositionWithinMonitor();
 
 	bool isAlwaysOnTop() const;
 	void setAlwaysOnTop(bool onTop);

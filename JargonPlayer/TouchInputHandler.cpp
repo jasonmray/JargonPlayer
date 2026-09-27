@@ -4,7 +4,7 @@
 
 #include "Jargon/StringUtilities.h"
 
-#include <libmpv/include/client.h>
+#include <mpv/client.h>
 
 
 TouchInputHandler::TouchInputHandler(){

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sdl/include/SDL.h>
+#include <SDL.h>
 
 struct mpv_handle;
 class VideoWindow;
